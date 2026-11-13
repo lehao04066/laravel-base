@@ -1,15 +1,17 @@
 <?php
 
+use App\Http\Controllers\ExploreController;
 use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
-| Web Routes - GoSport UI Preview on Laravel Base
+| Web Routes - GoSport Badminton System on Laravel Base
 |--------------------------------------------------------------------------
 */
 
-// Trang chu GoSport
-Route::view('/', 'home')->name('home');
+// CV01: Khám phá cụm sân & Bộ lọc đa tiêu chí
+Route::get('/', [ExploreController::class, 'index'])->name('home');
+Route::get('/explore', [ExploreController::class, 'index'])->name('explore');
 
-// Dashboard Admin GoSport
+// Dashboard Admin
 Route::view('/admin', 'admin.dashboard')->name('admin.dashboard');
