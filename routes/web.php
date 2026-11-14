@@ -1,10 +1,23 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ExploreController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', fn () => redirect()->route('login'))->name('home');
+/*
+|--------------------------------------------------------------------------
+| Web Routes - GoSport Badminton System on Laravel Base
+|--------------------------------------------------------------------------
+*/
 
+// CV01: Khám phá cụm sân & Bộ lọc đa tiêu chí
+Route::get('/', [ExploreController::class, 'index'])->name('home');
+Route::get('/explore', [ExploreController::class, 'index'])->name('explore');
+
+// Dashboard Admin (Giao diện quản trị GoSport)
+Route::view('/admin', 'admin.dashboard')->name('admin.dashboard');
+
+// Authentication Routes
 Route::middleware('guest')->group(function (): void {
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
     Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:10,1');

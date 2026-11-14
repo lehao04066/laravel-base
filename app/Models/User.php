@@ -5,9 +5,11 @@ namespace App\Models;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 class User extends Authenticatable
 {
@@ -36,6 +38,36 @@ class User extends Authenticatable
         ];
     }
 
+    public function isSuperAdmin(): bool
+    {
+        return $this->hasRole('super_admin') || $this->role === 'super_admin';
+    }
+
+    public function isAdmin(): bool
+    {
+        return $this->hasAnyRole(['super_admin', 'admin']);
+    }
+
+    public function isOwner(): bool
+    {
+        return $this->hasAnyRole(['super_admin', 'owner']);
+    }
+
+    public function isStaff(): bool
+    {
+        return $this->hasAnyRole(['super_admin', 'admin', 'owner', 'staff']);
+    }
+
+    public function isCustomer(): bool
+    {
+        return $this->hasRole('customer') || $this->role === 'customer';
+    }
+
+    public function isCoach(): bool
+    {
+        return $this->hasRole('coach') || $this->role === 'coach';
+    }
+
     public function roles(): BelongsToMany
     {
         return $this->belongsToMany(Role::class, 'role_user')->withPivot('venue_id')->withTimestamps();
@@ -56,5 +88,10 @@ class User extends Authenticatable
         }
 
         return in_array($this->role, $roles, true);
+    }
+
+    public function matchPosts(): HasMany
+    {
+        return $this->hasMany(MatchPost::class);
     }
 }
