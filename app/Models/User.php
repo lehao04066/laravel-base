@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -12,6 +13,7 @@ use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
+    /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable, SoftDeletes;
 
     protected $fillable = [
@@ -38,37 +40,32 @@ class User extends Authenticatable
 
     public function isSuperAdmin(): bool
     {
-        return $this->role === 'super_admin';
+        return $this->hasRole('super_admin') || $this->role === 'super_admin';
     }
 
     public function isAdmin(): bool
     {
-        return in_array($this->role, ['super_admin', 'admin']);
+        return $this->hasAnyRole(['super_admin', 'admin']);
     }
 
     public function isOwner(): bool
     {
-        return in_array($this->role, ['super_admin', 'owner']);
+        return $this->hasAnyRole(['super_admin', 'owner']);
     }
 
     public function isStaff(): bool
     {
-        return in_array($this->role, ['super_admin', 'admin', 'owner', 'staff']);
+        return $this->hasAnyRole(['super_admin', 'admin', 'owner', 'staff']);
     }
 
     public function isCustomer(): bool
     {
-        return $this->role === 'customer';
+        return $this->hasRole('customer') || $this->role === 'customer';
     }
 
     public function isCoach(): bool
     {
-        return $this->role === 'coach';
-    }
-
-    public function profile(): HasOne
-    {
-        return $this->hasOne(UserProfile::class);
+        return $this->hasRole('coach') || $this->role === 'coach';
     }
 
     public function roles(): BelongsToMany
@@ -76,33 +73,25 @@ class User extends Authenticatable
         return $this->belongsToMany(Role::class, 'role_user')->withPivot('venue_id')->withTimestamps();
     }
 
-    public function bookings(): HasMany
+    public function hasRole(string $role): bool
     {
-        return $this->hasMany(Booking::class);
+        return $this->hasAnyRole([$role]);
     }
 
-    public function wallet(): HasOne
+    /** @param array<int, string> $roles */
+    public function hasAnyRole(array $roles): bool
     {
-        return $this->hasOne(WalletAccount::class);
-    }
+        $assignedRoles = $this->roles->pluck('name')->all();
 
-    public function memberships(): HasMany
-    {
-        return $this->hasMany(UserMembership::class);
-    }
+        if ($assignedRoles !== []) {
+            return count(array_intersect($roles, $assignedRoles)) > 0;
+        }
 
-    public function reviews(): HasMany
-    {
-        return $this->hasMany(Review::class);
+        return in_array($this->role, $roles, true);
     }
 
     public function matchPosts(): HasMany
     {
         return $this->hasMany(MatchPost::class);
-    }
-
-    public function staffProfile(): HasOne
-    {
-        return $this->hasOne(StaffProfile::class);
     }
 }
