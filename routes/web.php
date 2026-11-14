@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\StaffDashboardController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', fn () => redirect()->route('login'))->name('home');
@@ -23,10 +24,8 @@ Route::middleware('auth')->group(function (): void {
         'roleDescription' => 'Theo dõi hoạt động và cơ sở sân của bạn.',
     ])->middleware('roles:owner')->name('dashboard.owner');
 
-    Route::view('/dashboard/staff', 'auth.dashboard', [
-        'roleLabel' => 'Nhân viên',
-        'roleDescription' => 'Truy cập công cụ hỗ trợ vận hành và phục vụ khách hàng.',
-    ])->middleware('roles:staff')->name('dashboard.staff');
+    Route::get('/dashboard/staff', StaffDashboardController::class)
+        ->middleware('roles:staff')->name('dashboard.staff');
 
     Route::view('/dashboard/coach', 'auth.dashboard', [
         'roleLabel' => 'Huấn luyện viên',
