@@ -90,6 +90,16 @@ class User extends Authenticatable
         return in_array($this->role, $roles, true);
     }
 
+    public function profile(): HasOne
+    {
+        return $this->hasOne(UserProfile::class);
+    }
+
+    public function wallet(): HasOne
+    {
+        return $this->hasOne(WalletAccount::class);
+    }
+
     public function matchPosts(): HasMany
     {
         return $this->hasMany(MatchPost::class);
