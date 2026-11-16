@@ -87,6 +87,11 @@
                                     </a>
                                 @endif
 
+                                <a href="{{ route('profile.show') }}" class="flex items-center gap-3 px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-blue-50 hover:text-blue-700 transition">
+                                    <span class="material-symbols-outlined text-lg">account_balance_wallet</span>
+                                    <span>Hồ sơ &amp; Ví thể thao</span>
+                                </a>
+
                                 <div class="border-t border-slate-100 pt-1">
                                     <form method="POST" action="{{ route('logout') }}">
                                         @csrf
@@ -131,6 +136,10 @@
                                 <span>Mở Dashboard Admin</span>
                             </a>
                         @endif
+                        <a href="{{ route('profile.show') }}" class="flex items-center gap-2 px-3 py-2.5 rounded-xl text-sm font-bold text-blue-700 bg-blue-50 hover:bg-blue-100 mb-2">
+                            <span class="material-symbols-outlined text-lg">account_balance_wallet</span>
+                            <span>Hồ sơ &amp; Ví thể thao</span>
+                        </a>
                         <form method="POST" action="{{ route('logout') }}" class="mt-2">
                             @csrf
                             <button type="submit" class="flex w-full items-center gap-2 px-3 py-2.5 rounded-xl text-sm font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 transition">

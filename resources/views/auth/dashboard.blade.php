@@ -34,6 +34,11 @@
             <strong>{{ auth()->user()->name }}</strong>
             <span>{{ auth()->user()->email }} · {{ $roleLabel }}</span>
         </div>
+        @if ($roleLabel === 'Thành viên')
+            <a href="{{ route('profile.show') }}" style="display:inline-flex;min-height:45px;align-items:center;gap:8px;padding:0 17px;border-radius:12px;background:#eff6ff;color:#2563eb;font-size:12px;font-weight:700;text-decoration:none;">
+                <span>Ví &amp; hồ sơ thể thao</span>
+            </a>
+        @endif
         <form method="POST" action="{{ route('logout') }}">
             @csrf
             <button class="logout" type="submit">Đăng xuất an toàn</button>
