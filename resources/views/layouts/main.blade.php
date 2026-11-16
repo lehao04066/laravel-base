@@ -99,6 +99,10 @@
                             </div>
                         </div>
                     @else
+                        <a href="{{ route('register') }}" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold text-blue-700 bg-blue-50 hover:bg-blue-100 transition">
+                            <span class="material-symbols-outlined text-lg">person_add</span>
+                            <span>Đăng ký</span>
+                        </a>
                         <a href="{{ route('login') }}" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold text-white bg-blue-600 hover:bg-blue-700 shadow-sm shadow-blue-500/20 transition">
                             <span class="material-symbols-outlined text-lg">login</span>
                             <span>Đăng nhập</span>
@@ -135,6 +139,10 @@
                             </button>
                         </form>
                     @else
+                        <a href="{{ route('register') }}" class="flex items-center gap-2 px-3 py-2.5 rounded-xl text-sm font-bold text-blue-700 bg-blue-50 hover:bg-blue-100 mb-2">
+                            <span class="material-symbols-outlined text-lg">person_add</span>
+                            <span>Đăng ký thành viên</span>
+                        </a>
                         <a href="{{ route('login') }}" class="flex items-center gap-2 px-3 py-2.5 rounded-xl text-sm font-bold text-white bg-blue-600 hover:bg-blue-700">
                             <span class="material-symbols-outlined text-lg">login</span>
                             <span>Đăng nhập</span>

@@ -164,7 +164,7 @@
                     <span class="role">Huấn luyện viên</span>
                     <span class="role">Thành viên</span>
                 </div>
-                <p class="panel-footer">Cần hỗ trợ đăng nhập? Vui lòng liên hệ quản trị viên GoSport.</p>
+                <p class="panel-footer">Chưa có tài khoản? <a href="{{ route('register') }}" class="text-blue-600 font-bold hover:underline">Đăng ký thành viên</a><br>Cần hỗ trợ? Vui lòng liên hệ quản trị viên GoSport.</p>
             </div>
         </section>
     </main>
