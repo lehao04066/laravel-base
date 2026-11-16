@@ -172,11 +172,11 @@
         <div class="p-4 border-t border-slate-800 flex items-center justify-between">
             <div class="flex items-center gap-3 overflow-hidden">
                 <div class="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-white font-bold text-xs shrink-0">
-                    QT
+                    <span class="material-symbols-outlined text-base">person</span>
                 </div>
                 <div class="truncate">
-                    <p class="text-xs font-bold text-white truncate">Quản trị viên</p>
-                    <p class="text-[10px] text-slate-400 truncate">admin@gosport.vn</p>
+                    <p class="text-xs font-bold text-white truncate">{{ auth()->user()->name }}</p>
+                    <p class="text-[10px] text-slate-400 truncate">{{ auth()->user()->email }}</p>
                 </div>
             </div>
             <span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
@@ -205,6 +205,14 @@
                     <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
                     <span>Cụm Sân: GoSport Arena Cầu Giấy (12 sân)</span>
                 </div>
+
+                <form method="POST" action="{{ route('logout') }}">
+                    @csrf
+                    <button type="submit" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-700 text-xs font-bold transition">
+                        <span class="material-symbols-outlined text-sm">logout</span>
+                        <span class="hidden sm:inline">Đăng xuất</span>
+                    </button>
+                </form>
 
                 <a href="{{ route('home') }}" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition">
                     <span class="material-symbols-outlined text-sm">home</span>

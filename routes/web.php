@@ -15,7 +15,9 @@ Route::get('/', [ExploreController::class, 'index'])->name('home');
 Route::get('/explore', [ExploreController::class, 'index'])->name('explore');
 
 // Dashboard Admin (Giao diện quản trị GoSport)
-Route::view('/admin', 'admin.dashboard')->name('admin.dashboard');
+Route::view('/admin', 'admin.dashboard')
+    ->middleware(['auth', 'roles:super_admin,admin'])
+    ->name('admin.dashboard');
 
 // Authentication Routes
 Route::middleware('guest')->group(function (): void {
@@ -26,10 +28,9 @@ Route::middleware('guest')->group(function (): void {
 Route::middleware('auth')->group(function (): void {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-    Route::view('/dashboard/admin', 'auth.dashboard', [
-        'roleLabel' => 'Quản trị viên',
-        'roleDescription' => 'Quản lý và vận hành hệ thống GoSport.',
-    ])->middleware('roles:super_admin,admin')->name('dashboard.admin');
+    Route::view('/dashboard/admin', 'admin.dashboard')
+        ->middleware('roles:super_admin,admin')
+        ->name('dashboard.admin');
 
     Route::view('/dashboard/owner', 'auth.dashboard', [
         'roleLabel' => 'Chủ sân',

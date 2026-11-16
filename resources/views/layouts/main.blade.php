@@ -56,50 +56,54 @@
 
                 <!-- Right Actions -->
                 <div class="flex items-center gap-3">
-                    <!-- Quick Admin Portal Link -->
-                    <a href="{{ route('admin.dashboard') }}" class="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold text-white bg-indigo-600 hover:bg-indigo-700 shadow-sm shadow-indigo-500/20 transition">
-                        <span class="material-symbols-outlined text-base">admin_panel_settings</span>
-                        <span>Dashboard Admin</span>
-                    </a>
+                    @auth
+                        @if (auth()->user()->hasAnyRole(['super_admin', 'admin']))
+                            <a href="{{ route('admin.dashboard') }}" class="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold text-white bg-indigo-600 hover:bg-indigo-700 shadow-sm shadow-indigo-500/20 transition">
+                                <span class="material-symbols-outlined text-base">admin_panel_settings</span>
+                                <span>Dashboard Admin</span>
+                            </a>
+                        @endif
 
-                    <!-- User Profile Menu (Static Demo) -->
-                    <div class="relative" x-data="{ open: false }">
-                        <button @click="open = !open" class="flex items-center gap-2 p-1.5 rounded-full hover:bg-slate-100 transition focus:outline-none">
-                            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80" class="w-9 h-9 rounded-full object-cover border-2 border-blue-600" alt="Avatar">
-                            <span class="hidden lg:block text-sm font-semibold text-slate-800 pr-1">Quản trị viên</span>
-                            <span class="material-symbols-outlined text-slate-400 text-sm">expand_more</span>
-                        </button>
+                        <div class="relative" x-data="{ open: false }">
+                            <button @click="open = !open" class="flex items-center gap-2 p-1.5 rounded-full hover:bg-slate-100 transition focus:outline-none" aria-label="Tài khoản">
+                                <span class="w-9 h-9 rounded-full bg-blue-600 flex items-center justify-center text-white border-2 border-blue-600">
+                                    <span class="material-symbols-outlined text-xl">person</span>
+                                </span>
+                                <span class="hidden lg:block text-sm font-semibold text-slate-800 pr-1">{{ auth()->user()->name }}</span>
+                                <span class="material-symbols-outlined text-slate-400 text-sm">expand_more</span>
+                            </button>
 
-                        <div x-show="open" @click.outside="open = false" x-transition class="absolute right-0 mt-2 w-64 bg-white rounded-2xl shadow-xl border border-slate-100 py-2 z-50">
-                            <div class="px-4 py-3 border-b border-slate-100">
-                                <p class="text-xs text-slate-400 font-medium">Đăng nhập với tư cách</p>
-                                <p class="text-sm font-bold text-slate-900 truncate">Quản trị viên</p>
-                                <span class="inline-block mt-1 px-2 py-0.5 text-[11px] font-semibold rounded-full bg-blue-50 text-blue-700 capitalize">Administrator</span>
-                            </div>
+                            <div x-show="open" @click.outside="open = false" x-transition class="absolute right-0 mt-2 w-64 bg-white rounded-2xl shadow-xl border border-slate-100 py-2 z-50">
+                                <div class="px-4 py-3 border-b border-slate-100">
+                                    <p class="text-xs text-slate-400 font-medium">Tài khoản đang đăng nhập</p>
+                                    <p class="text-sm font-bold text-slate-900 truncate">{{ auth()->user()->name }}</p>
+                                    <p class="text-xs text-slate-500 truncate">{{ auth()->user()->email }}</p>
+                                </div>
 
-                            <div class="py-1 text-sm font-medium text-slate-700">
-                                <a href="javascript:void(0)" class="flex items-center gap-3 px-4 py-2 hover:bg-slate-50 transition">
-                                    <span class="material-symbols-outlined text-slate-400 text-lg">person</span>
-                                    <span>Hồ sơ &amp; Thẻ VIP</span>
-                                </a>
-                                <a href="javascript:void(0)" class="flex items-center gap-3 px-4 py-2 hover:bg-slate-50 transition">
-                                    <span class="material-symbols-outlined text-slate-400 text-lg">confirmation_number</span>
-                                    <span>Lịch đặt &amp; Vé sân</span>
-                                </a>
-                                <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-3 px-4 py-2 text-indigo-600 hover:bg-indigo-50 font-semibold transition">
-                                    <span class="material-symbols-outlined text-lg">admin_panel_settings</span>
-                                    <span>Trang Quản Trị Admin &rarr;</span>
-                                </a>
-                            </div>
+                                @if (auth()->user()->hasAnyRole(['super_admin', 'admin']))
+                                    <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-3 px-4 py-2 text-sm text-indigo-600 hover:bg-indigo-50 font-semibold transition">
+                                        <span class="material-symbols-outlined text-lg">admin_panel_settings</span>
+                                        <span>Trang quản trị</span>
+                                    </a>
+                                @endif
 
-                            <div class="border-t border-slate-100 pt-1">
-                                <a href="javascript:void(0)" class="w-full flex items-center gap-3 px-4 py-2 text-sm font-medium text-slate-400 cursor-not-allowed">
-                                    <span class="material-symbols-outlined text-lg">logout</span>
-                                    <span>Đăng xuất (Vô hiệu hóa)</span>
-                                </a>
+                                <div class="border-t border-slate-100 pt-1">
+                                    <form method="POST" action="{{ route('logout') }}">
+                                        @csrf
+                                        <button type="submit" class="w-full flex items-center gap-3 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 transition text-left bg-transparent border-0 cursor-pointer">
+                                            <span class="material-symbols-outlined text-lg">logout</span>
+                                            <span>Đăng xuất</span>
+                                        </button>
+                                    </form>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    @else
+                        <a href="{{ route('login') }}" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold text-white bg-blue-600 hover:bg-blue-700 shadow-sm shadow-blue-500/20 transition">
+                            <span class="material-symbols-outlined text-lg">login</span>
+                            <span>Đăng nhập</span>
+                        </a>
+                    @endauth
 
                     <!-- Mobile Menu Toggle Button -->
                     <button @click="mobileMenuOpen = !mobileMenuOpen" class="md:hidden p-2 rounded-xl text-slate-600 hover:bg-slate-100 transition focus:outline-none" aria-label="Menu">
@@ -116,10 +120,26 @@
                 <a href="javascript:void(0)" class="block px-3 py-2 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-50">Academy HLV</a>
                 <a href="javascript:void(0)" class="block px-3 py-2 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-50">Badminton Hub</a>
                 <div class="pt-2 border-t border-slate-100">
-                    <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-2 px-3 py-2.5 rounded-xl text-sm font-bold text-white bg-indigo-600 hover:bg-indigo-700">
-                        <span class="material-symbols-outlined text-lg">admin_panel_settings</span>
-                        <span>Mở Dashboard Admin</span>
-                    </a>
+                    @auth
+                        @if (auth()->user()->hasAnyRole(['super_admin', 'admin']))
+                            <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-2 px-3 py-2.5 rounded-xl text-sm font-bold text-white bg-indigo-600 hover:bg-indigo-700">
+                                <span class="material-symbols-outlined text-lg">admin_panel_settings</span>
+                                <span>Mở Dashboard Admin</span>
+                            </a>
+                        @endif
+                        <form method="POST" action="{{ route('logout') }}" class="mt-2">
+                            @csrf
+                            <button type="submit" class="flex w-full items-center gap-2 px-3 py-2.5 rounded-xl text-sm font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 transition">
+                                <span class="material-symbols-outlined text-lg">logout</span>
+                                <span>Đăng xuất</span>
+                            </button>
+                        </form>
+                    @else
+                        <a href="{{ route('login') }}" class="flex items-center gap-2 px-3 py-2.5 rounded-xl text-sm font-bold text-white bg-blue-600 hover:bg-blue-700">
+                            <span class="material-symbols-outlined text-lg">login</span>
+                            <span>Đăng nhập</span>
+                        </a>
+                    @endauth
                 </div>
             </div>
         </div>
