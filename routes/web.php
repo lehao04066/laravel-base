@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ExploreController;
+use App\Http\Controllers\WalletController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -28,6 +29,11 @@ Route::middleware('guest')->group(function (): void {
 });
 
 Route::middleware('auth')->group(function (): void {
+    Route::get('/profile', [WalletController::class, 'show'])->name('profile.show');
+    Route::post('/profile/topup', [WalletController::class, 'topup'])
+        ->middleware('throttle:5,1')
+        ->name('profile.topup');
+
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
     Route::view('/dashboard/admin', 'admin.dashboard')
