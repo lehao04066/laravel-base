@@ -83,7 +83,7 @@ class AuthController extends Controller
         $request->session()->regenerate();
         RateLimiter::clear($throttleKey);
 
-        return redirect()->intended(route($this->landingRoute($user)))
+        return redirect()->route($this->landingRoute($user))
             ->with('success', 'Đăng nhập thành công. Chào mừng bạn đến với GoSport!');
     }
 
@@ -182,7 +182,7 @@ class AuthController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect()->route('login')->with('success', 'Bạn đã đăng xuất an toàn.');
+        return redirect()->route('login')->with('success', 'Bạn đã đăng xuất thành công.');
     }
 
     private function normalizeVietnamesePhone(string $phone): string
@@ -205,7 +205,7 @@ class AuthController extends Controller
             $user->hasRole('owner') => 'dashboard.owner',
             $user->hasRole('staff') => 'dashboard.staff',
             $user->hasRole('coach') => 'dashboard.coach',
-            default => 'dashboard.customer',
+            default => 'explore',
         };
     }
 }

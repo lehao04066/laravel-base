@@ -78,6 +78,19 @@
                                     <p class="text-xs text-slate-400 font-medium">Tài khoản đang đăng nhập</p>
                                     <p class="text-sm font-bold text-slate-900 truncate">{{ auth()->user()->name }}</p>
                                     <p class="text-xs text-slate-500 truncate">{{ auth()->user()->email }}</p>
+                                    @php
+                                        $accountRole = match (true) {
+                                            auth()->user()->hasAnyRole(['super_admin', 'admin']) => ['label' => 'Quản trị', 'class' => 'bg-indigo-50 text-indigo-700 border-indigo-100'],
+                                            auth()->user()->hasRole('owner') => ['label' => 'Chủ sân', 'class' => 'bg-amber-50 text-amber-700 border-amber-100'],
+                                            auth()->user()->hasRole('staff') => ['label' => 'Nhân viên', 'class' => 'bg-emerald-50 text-emerald-700 border-emerald-100'],
+                                            auth()->user()->hasRole('coach') => ['label' => 'Huấn luyện viên', 'class' => 'bg-violet-50 text-violet-700 border-violet-100'],
+                                            auth()->user()->hasRole('customer') => ['label' => 'Thành viên', 'class' => 'bg-blue-50 text-blue-700 border-blue-100'],
+                                            default => ['label' => 'Tài khoản', 'class' => 'bg-slate-50 text-slate-600 border-slate-200'],
+                                        };
+                                    @endphp
+                                    <span class="mt-2 inline-flex items-center rounded-full border px-2.5 py-1 text-[10px] font-extrabold uppercase tracking-wider {{ $accountRole['class'] }}">
+                                        {{ $accountRole['label'] }}
+                                    </span>
                                 </div>
 
                                 @if (auth()->user()->hasAnyRole(['super_admin', 'admin']))

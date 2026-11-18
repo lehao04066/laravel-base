@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CoachDashboardController;
 use App\Http\Controllers\ExploreController;
 use Illuminate\Support\Facades\Route;
 
@@ -34,20 +35,21 @@ Route::middleware('auth')->group(function (): void {
         ->middleware('roles:super_admin,admin')
         ->name('dashboard.admin');
 
-    Route::view('/dashboard/owner', 'auth.dashboard', [
+    Route::view('/dashboard/owner', 'auth.role-dashboard', [
+        'dashboardType' => 'owner',
         'roleLabel' => 'Chủ sân',
         'roleDescription' => 'Theo dõi hoạt động và cơ sở sân của bạn.',
     ])->middleware('roles:owner')->name('dashboard.owner');
 
-    Route::view('/dashboard/staff', 'auth.dashboard', [
+    Route::view('/dashboard/staff', 'auth.role-dashboard', [
+        'dashboardType' => 'staff',
         'roleLabel' => 'Nhân viên',
         'roleDescription' => 'Truy cập công cụ hỗ trợ vận hành và phục vụ khách hàng.',
     ])->middleware('roles:staff')->name('dashboard.staff');
 
-    Route::view('/dashboard/coach', 'auth.dashboard', [
-        'roleLabel' => 'Huấn luyện viên',
-        'roleDescription' => 'Quản lý hoạt động huấn luyện và lịch học.',
-    ])->middleware('roles:coach')->name('dashboard.coach');
+    Route::get('/dashboard/coach', CoachDashboardController::class)
+        ->middleware('roles:coach')
+        ->name('dashboard.coach');
 
     Route::view('/dashboard/customer', 'auth.dashboard', [
         'roleLabel' => 'Thành viên',
