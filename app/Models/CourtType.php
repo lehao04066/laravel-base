@@ -7,7 +7,11 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class CourtType extends Model
 {
-    protected $fillable = ['name', 'description', 'is_premium'];
+    protected $fillable = [
+        'name',
+        'description',
+        'is_premium',
+    ];
 
     protected $casts = [
         'is_premium' => 'boolean',

@@ -40,14 +40,4 @@ class Court extends Model
     {
         return $this->hasMany(BookingItem::class);
     }
-
-    public function holds(): HasMany
-    {
-        return $this->hasMany(BookingHold::class);
-    }
-
-    public function maintenances(): HasMany
-    {
-        return $this->hasMany(CourtMaintenance::class);
-    }
 }

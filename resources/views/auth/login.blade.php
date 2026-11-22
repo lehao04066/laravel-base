@@ -1,184 +1,226 @@
-<!doctype html>
-<html lang="vi">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Đăng nhập | GoSport</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
-    <style>
-        :root { color-scheme: light; --navy: #0b1735; --blue: #2563eb; --muted: #718096; --mint: #61e3c0; }
-        * { box-sizing: border-box; }
-        body { min-height: 100vh; margin: 0; background: #f3f6fb; color: #172033; font-family: 'Plus Jakarta Sans', sans-serif; }
-        button, input { font: inherit; }
-        .page { width: min(1180px, calc(100% - 48px)); margin: 0 auto; padding: 25px 0 22px; }
-        .brand { display: inline-flex; align-items: center; gap: 11px; color: #111827; text-decoration: none; }
-        .brand-mark { display: grid; width: 43px; height: 43px; place-items: center; border-radius: 14px; background: #2563eb; color: white; box-shadow: 0 8px 20px #2563eb35; }
-        .brand-mark svg { width: 25px; height: 25px; }
-        .brand-name { font: 700 24px/1 'Space Grotesk', sans-serif; letter-spacing: -1px; }
-        .brand-name span { color: var(--blue); }
-        .brand-caption { margin-top: 4px; color: #8b96a9; font-size: 9px; font-weight: 800; letter-spacing: 1.7px; text-transform: uppercase; }
-        .layout { display: grid; grid-template-columns: 1.08fr .92fr; gap: 25px; margin-top: 24px; align-items: stretch; }
-        .hero { position: relative; display: flex; min-height: 650px; flex-direction: column; justify-content: space-between; overflow: hidden; padding: 45px 48px 30px; border-radius: 30px; color: #fff; background: linear-gradient(145deg, #10245a 0%, #111c3b 54%, #091326 100%); box-shadow: 0 22px 55px #12214b20; }
-        .hero:before { position: absolute; inset: 0; background-image: radial-gradient(#d9f7ff44 .8px, transparent .8px); background-size: 17px 17px; content: ''; opacity: .23; mask-image: linear-gradient(130deg, #000 0%, transparent 66%); }
-        .hero:after { position: absolute; top: -145px; right: -140px; width: 410px; height: 410px; border: 1px solid #ffffff12; border-radius: 50%; box-shadow: 0 0 0 50px #ffffff08, 0 0 0 100px #ffffff05; content: ''; }
-        .hero-content, .hero-bottom { position: relative; z-index: 1; }
-        .eyebrow { display: inline-flex; align-items: center; gap: 9px; padding: 9px 13px; border: 1px solid #64e2c044; border-radius: 99px; background: #39cbaa17; color: #9af2dc; font-size: 11px; font-weight: 800; letter-spacing: .15px; }
-        .status-dot { width: 7px; height: 7px; border-radius: 50%; background: #61e3c0; box-shadow: 0 0 0 4px #61e3c022; }
-        h1 { max-width: 560px; margin: 28px 0 16px; font: 700 clamp(38px, 5vw, 55px)/1.06 'Space Grotesk', sans-serif; letter-spacing: -2.4px; }
-        h1 span { color: #74e8ce; }
-        .hero-copy { max-width: 465px; margin: 0; color: #bac8e2; font-size: 14px; line-height: 1.85; }
-        .hero-list { display: grid; gap: 13px; margin: 27px 0 0; padding: 0; list-style: none; color: #e2eafb; font-size: 12px; font-weight: 600; }
-        .hero-list li { display: flex; align-items: center; gap: 11px; }
-        .check { display: grid; width: 21px; height: 21px; flex: none; place-items: center; border-radius: 7px; background: #5de0bd1e; color: #70e7c8; font-size: 13px; }
-        .quote { display: flex; align-items: center; gap: 14px; max-width: 455px; margin-top: 34px; padding: 15px; border: 1px solid #ffffff15; border-radius: 18px; background: #ffffff0d; backdrop-filter: blur(10px); }
-        .quote-mark { display: grid; width: 39px; height: 39px; flex: none; place-items: center; border-radius: 12px; background: #f5b84020; color: #ffd574; font-size: 21px; }
-        .quote p { margin: 0; color: #e1e8f5; font-size: 11px; line-height: 1.7; }
-        .quote strong { display: block; margin-top: 5px; color: #86e8d0; font-size: 10px; }
-        .hero-bottom { display: flex; gap: 0; margin-top: 34px; padding-top: 21px; border-top: 1px solid #ffffff1c; }
-        .stat { flex: 1; padding-right: 12px; }
-        .stat + .stat { padding-left: 17px; border-left: 1px solid #ffffff20; }
-        .stat strong { display: block; color: #fff; font: 700 20px 'Space Grotesk', sans-serif; }
-        .stat span { display: block; margin-top: 4px; color: #a8b6d0; font-size: 10px; }
-        .panel-wrap { display: flex; align-items: center; }
-        .panel { width: 100%; padding: 38px 38px 31px; border: 1px solid #e7ebf2; border-radius: 27px; background: #fff; box-shadow: 0 18px 52px #14234512; }
-        .panel-tag { color: var(--blue); font-size: 10px; font-weight: 800; letter-spacing: 1.1px; text-transform: uppercase; }
-        h2 { margin: 8px 0 8px; color: #131d32; font: 700 29px/1.2 'Space Grotesk', sans-serif; letter-spacing: -.8px; }
-        .panel-copy { margin: 0 0 24px; color: var(--muted); font-size: 12px; line-height: 1.7; }
-        .alert { margin: 0 0 17px; padding: 12px 14px; border-radius: 12px; font-size: 11px; line-height: 1.6; }
-        .alert-error { border: 1px solid #fecdd3; background: #fff1f2; color: #be123c; }
-        .alert-success { border: 1px solid #a7f3d0; background: #ecfdf5; color: #047857; }
-        .field { margin-top: 17px; }
-        .field-label { display: block; margin-bottom: 8px; color: #3b465a; font-size: 10px; font-weight: 800; letter-spacing: .65px; text-transform: uppercase; }
-        .input-wrap { position: relative; }
-        .input-icon { position: absolute; top: 50%; left: 14px; width: 18px; height: 18px; transform: translateY(-50%); color: #94a1b5; pointer-events: none; }
-        .input { width: 100%; height: 49px; padding: 0 43px; border: 1px solid #e2e7ef; border-radius: 13px; outline: 0; background: #f8fafd; color: #18243b; font-size: 12px; transition: .18s ease; }
-        .input::placeholder { color: #aab4c3; }
-        .input:focus { border-color: #6d91f6; background: #fff; box-shadow: 0 0 0 4px #2563eb14; }
-        .input.is-invalid { border-color: #fb7185; }
-        .toggle { position: absolute; top: 50%; right: 13px; display: grid; width: 25px; height: 25px; transform: translateY(-50%); place-items: center; border: 0; background: transparent; color: #96a1b3; cursor: pointer; }
-        .toggle svg { width: 17px; height: 17px; }
-        .form-options { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin: 14px 0 20px; }
-        .remember { display: inline-flex; align-items: center; gap: 8px; color: #596579; font-size: 11px; cursor: pointer; }
-        .remember input { width: 15px; height: 15px; margin: 0; accent-color: var(--blue); }
-        .secure-note { color: #9aa5b5; font-size: 10px; }
-        .submit { display: flex; width: 100%; height: 51px; align-items: center; justify-content: center; gap: 10px; border: 0; border-radius: 13px; background: #2563eb; box-shadow: 0 11px 22px #2563eb35; color: #fff; font-size: 12px; font-weight: 800; cursor: pointer; transition: .2s ease; }
-        .submit:hover { transform: translateY(-1px); background: #1d4ed8; box-shadow: 0 13px 25px #2563eb42; }
-        .submit svg { width: 17px; height: 17px; }
-        .divider { display: flex; align-items: center; gap: 11px; margin: 22px 0 16px; color: #a1aabb; font-size: 9px; font-weight: 800; letter-spacing: .7px; }
-        .divider:before, .divider:after { height: 1px; flex: 1; background: #edf0f4; content: ''; }
-        .roles-title { margin: 0 0 10px; color: #647084; font-size: 10px; font-weight: 700; }
-        .roles { display: flex; flex-wrap: wrap; gap: 7px; }
-        .role { padding: 7px 9px; border: 1px solid #edf0f5; border-radius: 9px; background: #fafbfc; color: #536074; font-size: 9px; font-weight: 700; }
-        .panel-footer { margin: 23px 0 0; padding-top: 17px; border-top: 1px solid #edf0f4; color: #8a95a7; font-size: 10px; text-align: center; }
-        .page-footer { padding-top: 18px; color: #9ba6b7; font-size: 10px; text-align: center; }
-        @media (max-width: 900px) { .layout { grid-template-columns: 1fr; max-width: 610px; margin-right: auto; margin-left: auto; } .hero { min-height: 490px; padding: 35px; } .panel { padding: 34px; } }
-        @media (max-width: 520px) { .page { width: min(100% - 28px, 440px); padding-top: 16px; } .brand-mark { width: 39px; height: 39px; } .brand-name { font-size: 22px; } .layout { gap: 14px; margin-top: 18px; } .hero { min-height: 430px; padding: 28px 23px 22px; border-radius: 23px; } h1 { margin-top: 24px; font-size: 39px; } .hero-copy { font-size: 12px; } .hero-list { gap: 10px; font-size: 11px; } .quote { margin-top: 24px; } .hero-bottom { margin-top: 25px; } .stat + .stat { padding-left: 10px; } .stat strong { font-size: 17px; } .stat span { font-size: 9px; } .panel { padding: 27px 22px 24px; border-radius: 23px; } h2 { font-size: 26px; } .secure-note { display: none; } }
-    </style>
-</head>
-<body>
-<div class="page">
-    <a class="brand" href="{{ route('home') }}" aria-label="GoSport">
-        <span class="brand-mark" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7.2 3.7a6.8 6.8 0 0 1 9.6 9.6l-5.1 5.1a2.5 2.5 0 0 1-3.5-3.5l5.2-5.2"/><path d="m7.7 7.7 8.6 8.6M5 5l2 2m10 10 2 2"/></svg>
-        </span>
-        <span><span class="brand-name">Go<span>Sport</span></span><span class="brand-caption">Arena booking</span></span>
-    </a>
+@extends('layouts.main')
 
-    <main class="layout">
-        <section class="hero" aria-label="Giới thiệu GoSport">
-            <div class="hero-content">
-                <div class="eyebrow"><span class="status-dot"></span> NỀN TẢNG THỂ THAO GO SPORT</div>
-                <h1>Cháy hết mình<br><span>trên từng cú smash.</span></h1>
-                <p class="hero-copy">Một tài khoản để kết nối với sân đấu, đội ngũ và cộng đồng GoSport. Đăng nhập để tiếp tục hành trình của bạn.</p>
-                <ul class="hero-list">
-                    <li><span class="check">✓</span> Đặt sân nhanh, chủ động lịch thi đấu</li>
-                    <li><span class="check">✓</span> Kết nối thành viên và huấn luyện viên</li>
-                    <li><span class="check">✓</span> Phân quyền phù hợp với từng vai trò</li>
-                </ul>
-                <div class="quote">
-                    <span class="quote-mark" aria-hidden="true">✦</span>
-                    <p>“Sân tốt, lịch rõ ràng, cả đội chỉ cần tập trung vào trận đấu.”<strong>Cộng đồng GoSport</strong></p>
+@section('title', 'Đăng Nhập & Đăng Ký Tài Khoản - GoSport Arena')
+
+@section('content')
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
+        
+        <!-- Left Column: Hero Branding Showcase -->
+        <section class="lg:col-span-7 rounded-3xl p-8 lg:p-12 text-white relative overflow-hidden flex flex-col justify-between shadow-xl min-h-[580px] bg-gradient-to-br from-blue-900 via-indigo-950 to-slate-900">
+            <div class="absolute inset-0 opacity-15 bg-[radial-gradient(#38bdf8_1px,transparent_1px)] [background-size:16px_16px]"></div>
+            
+            <div class="relative z-10">
+                <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-500/20 border border-blue-400/30 text-blue-300 text-xs font-semibold mb-6">
+                    <span class="material-symbols-outlined text-sm">verified</span>
+                    <span>Hệ Thống Đặt Sân Cầu Lông GoSport</span>
+                </div>
+
+                <h1 class="font-headline font-extrabold text-3xl sm:text-4xl lg:text-5xl leading-tight mb-4 tracking-tight">
+                    Cháy Hết Mình <br>
+                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-teal-300 to-emerald-400">Trên Từng Cú Smash</span>
+                </h1>
+
+                <p class="text-slate-300 text-sm sm:text-base leading-relaxed max-w-lg mb-8">
+                    Tìm kiếm cụm sân dễ dàng, kiểm tra lịch trống trực quan và xác nhận đặt sân nhanh chóng với hình thức thanh toán trực tiếp tại sân.
+                </p>
+
+                <div class="p-4 rounded-2xl bg-white/10 backdrop-blur-md border border-white/10 flex items-center gap-4 max-w-md">
+                    <div class="w-12 h-12 rounded-xl bg-amber-400/20 border border-amber-300/30 flex items-center justify-center text-amber-300">
+                        <span class="material-symbols-outlined text-2xl">sports_tennis</span>
+                    </div>
+                    <div>
+                        <span class="font-bold text-white text-sm block">Đặt Sân Dễ Dàng &amp; Xác Nhận Ngay</span>
+                        <p class="text-xs text-slate-300 mt-0.5">Thanh toán tại quầy khi đến nhận sân, kiểm soát lịch đặt minh bạch.</p>
+                    </div>
                 </div>
             </div>
-            <div class="hero-bottom" aria-label="Thông tin hệ thống">
-                <div class="stat"><strong>5</strong><span>Nhóm vai trò</span></div>
-                <div class="stat"><strong>24/7</strong><span>Truy cập tài khoản</span></div>
-                <div class="stat"><strong>Secure</strong><span>Bảo mật phiên đăng nhập</span></div>
+
+            <!-- Reviewer Quote Card -->
+            <div class="relative z-10 mt-8 p-4 rounded-2xl bg-slate-800/60 backdrop-blur-md border border-slate-700/50 flex items-center gap-4">
+                <img class="w-12 h-12 rounded-full object-cover shrink-0 border border-blue-400/30 shadow-md" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80" alt="Hoàng Nam">
+                <div class="flex-1 min-w-0">
+                    <div class="flex items-center gap-1 text-amber-400">
+                        <span class="material-symbols-outlined text-base">star</span>
+                        <span class="material-symbols-outlined text-base">star</span>
+                        <span class="material-symbols-outlined text-base">star</span>
+                        <span class="material-symbols-outlined text-base">star</span>
+                        <span class="material-symbols-outlined text-base">star</span>
+                        <span class="text-xs font-bold text-white ml-1">4.9 / 5.0</span>
+                    </div>
+                    <p class="text-xs text-slate-200 mt-1 italic line-clamp-1">
+                        "Đặt sân cực nhanh, không lo trùng giờ. Lịch sân hiển thị trực quan và chuẩn xác!"
+                    </p>
+                    <span class="text-[11px] font-semibold text-blue-300 mt-0.5 block">Hoàng Nam — Trưởng CLB Cầu Giấy Smash</span>
+                </div>
+            </div>
+
+            <!-- Bottom Stats -->
+            <div class="relative z-10 pt-6 border-t border-slate-800/80 flex flex-wrap items-center justify-between gap-4 text-xs font-semibold text-slate-300">
+                <div class="flex items-center gap-2">
+                    <span class="material-symbols-outlined text-emerald-400 text-lg">stadium</span>
+                    <span>Sân Thi Đấu Tiêu Chuẩn</span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <span class="material-symbols-outlined text-blue-400 text-lg">verified</span>
+                    <span>Thảm BWF Chuyên Nghiệp</span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <span class="material-symbols-outlined text-amber-400 text-lg">payments</span>
+                    <span>Thanh Toán Tại Sân</span>
+                </div>
             </div>
         </section>
 
-        <section class="panel-wrap" aria-labelledby="login-title">
-            <div class="panel">
-                <div class="panel-tag">Thành viên GoSport</div>
-                <h2 id="login-title">Chào mừng trở lại!</h2>
-                <p class="panel-copy">Đăng nhập để truy cập khu vực dành riêng cho tài khoản của bạn.</p>
+        <!-- Right Column: Auth Card -->
+        <section class="lg:col-span-5 flex flex-col justify-center" x-data="{ tab: 'login' }">
+            <div class="w-full bg-white rounded-3xl p-6 sm:p-8 shadow-xl border border-slate-100 flex flex-col">
+                
+                <!-- Tab Navigation: Login vs Register -->
+                <div class="flex items-center p-1 rounded-2xl bg-slate-100 mb-6">
+                    <button @click="tab = 'login'" :class="tab === 'login' ? 'bg-white text-blue-600 shadow-sm font-bold' : 'text-slate-500 hover:text-slate-800 font-semibold'" class="flex-1 py-2.5 px-4 rounded-xl text-sm transition flex items-center justify-center gap-2">
+                        <span class="material-symbols-outlined text-base">login</span>
+                        <span>Đăng nhập</span>
+                    </button>
+                    <button @click="tab = 'register'" :class="tab === 'register' ? 'bg-white text-blue-600 shadow-sm font-bold' : 'text-slate-500 hover:text-slate-800 font-semibold'" class="flex-1 py-2.5 px-4 rounded-xl text-sm transition flex items-center justify-center gap-2">
+                        <span class="material-symbols-outlined text-base">person_add</span>
+                        <span>Đăng ký mới</span>
+                    </button>
+                </div>
 
-                @if (session('success'))
-                    <div class="alert alert-success" role="status">{{ session('success') }}</div>
-                @endif
-                @if ($errors->any())
-                    <div class="alert alert-error" role="alert">{{ $errors->first() }}</div>
-                @endif
-
-                <form method="POST" action="{{ route('login') }}" autocomplete="on">
-                    @csrf
-                    <div class="field">
-                        <label class="field-label" for="email">Email hoặc số điện thoại</label>
-                        <div class="input-wrap">
-                            <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m4 7 8 6 8-6"/></svg>
-                            <input class="input @error('email') is-invalid @enderror" id="email" name="email" type="text" value="{{ old('email') }}" placeholder="name@example.com hoặc 098 888 9999" autocomplete="username" autocapitalize="off" required autofocus>
-                        </div>
+                <!-- LOGIN TAB -->
+                <div x-show="tab === 'login'">
+                    <div class="mb-6">
+                        <span class="text-xs font-bold uppercase tracking-wider text-blue-600">Thành viên GoSport</span>
+                        <h2 class="text-2xl font-bold text-slate-900 mt-1 font-headline">Chào mừng trở lại!</h2>
+                        <p class="text-xs text-slate-500 mt-1">Đăng nhập để giữ chỗ sân yêu thích và quản lý các lượt đặt sân.</p>
                     </div>
 
-                    <div class="field">
-                        <label class="field-label" for="password">Mật khẩu</label>
-                        <div class="input-wrap">
-                            <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3m-4 5v2"/></svg>
-                            <input class="input" id="password" name="password" type="password" placeholder="Nhập mật khẩu của bạn" autocomplete="current-password" required>
-                            <button class="toggle" id="password-toggle" type="button" aria-label="Hiện mật khẩu" aria-pressed="false">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 12s3.3-6 9.5-6 9.5 6 9.5 6-3.3 6-9.5 6-9.5-6-9.5-6Z"/><circle cx="12" cy="12" r="2.5"/></svg>
+                    @if(session('error'))
+                        <div class="mb-4 p-3 bg-rose-50 border border-rose-200 text-rose-700 rounded-xl text-xs font-medium">
+                            {{ session('error') }}
+                        </div>
+                    @endif
+
+                    @if($errors->any())
+                        <div class="mb-4 p-3 bg-rose-50 border border-rose-200 text-rose-700 rounded-xl text-xs font-medium">
+                            {{ $errors->first() }}
+                        </div>
+                    @endif
+
+                    <form method="POST" action="{{ route('login') }}" class="space-y-4">
+                        @csrf
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Email hoặc Số điện thoại</label>
+                            <div class="relative">
+                                <span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-lg">mail</span>
+                                <input type="text" name="email" value="{{ old('email', 'client@gosport.vn') }}" required placeholder="client@gosport.vn hoặc 0988889999" class="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-blue-600 focus:bg-white transition">
+                            </div>
+                        </div>
+
+                        <div>
+                            <div class="flex items-center justify-between mb-1">
+                                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider">Mật khẩu</label>
+                                <span class="text-xs font-semibold text-slate-400">Mật khẩu demo: password123</span>
+                            </div>
+                            <div class="relative">
+                                <span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-lg">lock</span>
+                                <input type="password" name="password" value="password123" required placeholder="Nhập mật khẩu" class="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-blue-600 focus:bg-white transition">
+                            </div>
+                        </div>
+
+                        <div class="flex items-center justify-between py-1">
+                            <label class="flex items-center gap-2 cursor-pointer">
+                                <input type="checkbox" name="remember" class="w-4 h-4 rounded text-blue-600 border-slate-300 focus:ring-blue-500">
+                                <span class="text-xs font-medium text-slate-600">Ghi nhớ đăng nhập</span>
+                            </label>
+                        </div>
+
+                        <button type="submit" class="w-full py-3.5 px-4 bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm rounded-xl shadow-lg shadow-blue-500/25 transition transform active:scale-98 flex items-center justify-center gap-2">
+                            <span>Đăng Nhập Ngay</span>
+                            <span class="material-symbols-outlined text-lg">arrow_forward</span>
+                        </button>
+                    </form>
+
+                    <!-- Quick Demo Role Logins -->
+                    <div class="mt-6 pt-5 border-t border-slate-100">
+                        <p class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Đăng nhập nhanh theo vai trò (Demo):</p>
+                        <div class="grid grid-cols-2 gap-2 text-xs">
+                            <button type="button" onclick="fillRole('client@gosport.vn', 'password123')" class="p-2.5 rounded-lg bg-blue-50 hover:bg-blue-100 text-blue-700 font-semibold text-left transition truncate">
+                                🏸 Khách Hàng (Client)
+                            </button>
+                            <button type="button" onclick="fillRole('admin@gosport.vn', 'password123')" class="p-2.5 rounded-lg bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-semibold text-left transition truncate">
+                                ⚙️ Quản Trị Viên (Admin)
                             </button>
                         </div>
                     </div>
+                </div>
 
-                    <div class="form-options">
-                        <label class="remember"><input type="checkbox" name="remember" value="1" @checked(old('remember'))> Ghi nhớ đăng nhập</label>
-                        <span class="secure-note">Thông tin được bảo mật</span>
+                <!-- REGISTER TAB -->
+                <div x-show="tab === 'register'">
+                    <div class="mb-6">
+                        <span class="inline-flex items-center gap-1 text-xs font-bold uppercase tracking-wider text-emerald-600">
+                            <span class="material-symbols-outlined text-sm">how_to_reg</span>
+                            Tài khoản khách hàng
+                        </span>
+                        <h2 class="text-2xl font-bold text-slate-900 mt-1 font-headline">Đăng ký tài khoản</h2>
+                        <p class="text-xs text-slate-500 mt-1">Đăng ký tài khoản để tìm và đặt sân dễ dàng tại các cụm sân GoSport.</p>
                     </div>
 
-                    <button class="submit" type="submit">
-                        Đăng nhập
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6"/></svg>
-                    </button>
-                </form>
+                    <form method="POST" action="{{ route('register') }}" class="space-y-3.5">
+                        @csrf
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Họ và Tên *</label>
+                            <div class="relative">
+                                <span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-lg">badge</span>
+                                <input type="text" name="name" value="{{ old('name') }}" required placeholder="Ví dụ: Nguyễn Văn An" class="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-blue-600 focus:bg-white transition">
+                            </div>
+                        </div>
 
-                <div class="divider">PHÂN QUYỀN TÀI KHOẢN</div>
-                <p class="roles-title">Khu vực truy cập theo vai trò</p>
-                <div class="roles" aria-label="Các vai trò">
-                    <span class="role">Quản trị</span>
-                    <span class="role">Chủ sân</span>
-                    <span class="role">Nhân viên</span>
-                    <span class="role">Huấn luyện viên</span>
-                    <span class="role">Thành viên</span>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Số điện thoại *</label>
+                            <div class="relative">
+                                <span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-lg">call</span>
+                                <input type="text" name="phone" value="{{ old('phone') }}" required placeholder="0912345678" class="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-blue-600 focus:bg-white transition">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Email *</label>
+                            <div class="relative">
+                                <span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-lg">mail</span>
+                                <input type="email" name="email" value="{{ old('email') }}" required placeholder="email@example.com" class="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-blue-600 focus:bg-white transition">
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-2">
+                            <div>
+                                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Mật khẩu *</label>
+                                <input type="password" name="password" required placeholder="Tối thiểu 6 ký tự" class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-blue-600 focus:bg-white transition">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Xác nhận *</label>
+                                <input type="password" name="password_confirmation" required placeholder="Nhập lại mật khẩu" class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-blue-600 focus:bg-white transition">
+                            </div>
+                        </div>
+
+                        <button type="submit" class="w-full mt-2 py-3 px-4 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm rounded-xl shadow-lg shadow-emerald-600/25 transition transform active:scale-98 flex items-center justify-center gap-2">
+                            <span>Tạo Tài Khoản Khách Hàng</span>
+                            <span class="material-symbols-outlined text-lg">check_circle</span>
+                        </button>
+                    </form>
                 </div>
-                <p class="panel-footer">Chưa có tài khoản? <a href="{{ route('register') }}" class="text-blue-600 font-bold hover:underline">Đăng ký thành viên</a><br>Cần hỗ trợ? Vui lòng liên hệ quản trị viên GoSport.</p>
+
             </div>
         </section>
-    </main>
 
-    <footer class="page-footer">© {{ date('Y') }} GoSport Arena · Đặt sân, kết nối, bứt phá.</footer>
+    </div>
 </div>
+
 <script>
-    document.getElementById('password-toggle').addEventListener('click', function () {
-        const password = document.getElementById('password');
-        const visible = password.type === 'password';
-        password.type = visible ? 'text' : 'password';
-        this.setAttribute('aria-pressed', visible ? 'true' : 'false');
-        this.setAttribute('aria-label', visible ? 'Ẩn mật khẩu' : 'Hiện mật khẩu');
-    });
+    function fillRole(email, password) {
+        document.querySelector('input[name="email"]').value = email;
+        document.querySelector('input[name="password"]').value = password;
+    }
 </script>
-</body>
-</html>
+@endsection

@@ -46,69 +46,59 @@
 
                     <!-- Desktop Navigation Links -->
                     <nav class="hidden md:flex items-center gap-1 text-sm font-semibold text-slate-600">
-                        <a href="{{ route('home') }}" class="px-3 py-2 rounded-lg text-blue-600 bg-blue-50 font-bold hover:text-blue-600 transition">Khám Phá Sân</a>
-                        <a href="javascript:void(0)" class="px-3 py-2 rounded-lg hover:text-blue-600 hover:bg-blue-50/50 transition text-slate-600">Ghép Kèo</a>
-                        <a href="javascript:void(0)" class="px-3 py-2 rounded-lg hover:text-blue-600 hover:bg-blue-50/50 transition text-slate-600">Ưu Đãi &amp; Voucher</a>
-                        <a href="javascript:void(0)" class="px-3 py-2 rounded-lg hover:text-blue-600 hover:bg-blue-50/50 transition text-slate-600">Academy HLV</a>
-                        <a href="javascript:void(0)" class="px-3 py-2 rounded-lg hover:text-blue-600 hover:bg-blue-50/50 transition text-slate-600">Badminton Hub</a>
+                        <a href="{{ route('home') }}" class="px-3 py-2 rounded-lg {{ request()->routeIs('home', 'explore', 'venues.*') ? 'text-blue-600 bg-blue-50 font-bold' : 'hover:text-blue-600 hover:bg-blue-50/50' }} transition">Khám Phá Sân</a>
+                        @auth
+                            <a href="{{ route('my-bookings') }}" class="px-3 py-2 rounded-lg {{ request()->routeIs('my-bookings*') ? 'text-blue-600 bg-blue-50 font-bold' : 'hover:text-blue-600 hover:bg-blue-50/50' }} transition">Đơn Đặt Của Tôi</a>
+                        @endauth
                     </nav>
                 </div>
 
                 <!-- Right Actions -->
                 <div class="flex items-center gap-3">
                     @auth
-                        @if (auth()->user()->hasAnyRole(['super_admin', 'admin']))
+                        @if(Auth::user()->isAdmin())
                             <a href="{{ route('admin.dashboard') }}" class="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold text-white bg-indigo-600 hover:bg-indigo-700 shadow-sm shadow-indigo-500/20 transition">
                                 <span class="material-symbols-outlined text-base">admin_panel_settings</span>
-                                <span>Dashboard Admin</span>
+                                <span>Khu Vực Quản Trị</span>
                             </a>
                         @endif
 
+                        <!-- User Profile Menu -->
                         <div class="relative" x-data="{ open: false }">
-                            <button @click="open = !open" class="flex items-center gap-2 p-1.5 rounded-full hover:bg-slate-100 transition focus:outline-none" aria-label="Tài khoản">
-                                <span class="w-9 h-9 rounded-full bg-blue-600 flex items-center justify-center text-white border-2 border-blue-600">
-                                    <span class="material-symbols-outlined text-xl">person</span>
-                                </span>
-                                <span class="hidden lg:block text-sm font-semibold text-slate-800 pr-1">{{ auth()->user()->name }}</span>
+                            <button @click="open = !open" class="flex items-center gap-2 p-1.5 rounded-full hover:bg-slate-100 transition focus:outline-none">
+                                <div class="w-9 h-9 rounded-full bg-blue-600 text-white font-bold flex items-center justify-center text-sm border-2 border-blue-600">
+                                    {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
+                                </div>
+                                <span class="hidden lg:block text-sm font-semibold text-slate-800 pr-1">{{ Auth::user()->name }}</span>
                                 <span class="material-symbols-outlined text-slate-400 text-sm">expand_more</span>
                             </button>
 
                             <div x-show="open" @click.outside="open = false" x-transition class="absolute right-0 mt-2 w-64 bg-white rounded-2xl shadow-xl border border-slate-100 py-2 z-50">
                                 <div class="px-4 py-3 border-b border-slate-100">
-                                    <p class="text-xs text-slate-400 font-medium">Tài khoản đang đăng nhập</p>
-                                    <p class="text-sm font-bold text-slate-900 truncate">{{ auth()->user()->name }}</p>
-                                    <p class="text-xs text-slate-500 truncate">{{ auth()->user()->email }}</p>
-                                    @php
-                                        $accountRole = match (true) {
-                                            auth()->user()->hasAnyRole(['super_admin', 'admin']) => ['label' => 'Quản trị', 'class' => 'bg-indigo-50 text-indigo-700 border-indigo-100'],
-                                            auth()->user()->hasRole('owner') => ['label' => 'Chủ sân', 'class' => 'bg-amber-50 text-amber-700 border-amber-100'],
-                                            auth()->user()->hasRole('staff') => ['label' => 'Nhân viên', 'class' => 'bg-emerald-50 text-emerald-700 border-emerald-100'],
-                                            auth()->user()->hasRole('coach') => ['label' => 'Huấn luyện viên', 'class' => 'bg-violet-50 text-violet-700 border-violet-100'],
-                                            auth()->user()->hasRole('customer') => ['label' => 'Thành viên', 'class' => 'bg-blue-50 text-blue-700 border-blue-100'],
-                                            default => ['label' => 'Tài khoản', 'class' => 'bg-slate-50 text-slate-600 border-slate-200'],
-                                        };
-                                    @endphp
-                                    <span class="mt-2 inline-flex items-center rounded-full border px-2.5 py-1 text-[10px] font-extrabold uppercase tracking-wider {{ $accountRole['class'] }}">
-                                        {{ $accountRole['label'] }}
+                                    <p class="text-xs text-slate-400 font-medium">Đăng nhập với tư cách</p>
+                                    <p class="text-sm font-bold text-slate-900 truncate">{{ Auth::user()->name }}</p>
+                                    <span class="inline-block mt-1 px-2 py-0.5 text-[11px] font-semibold rounded-full {{ Auth::user()->isAdmin() ? 'bg-indigo-50 text-indigo-700' : 'bg-blue-50 text-blue-700' }}">
+                                        {{ Auth::user()->isAdmin() ? 'Quản Trị Viên (Admin)' : 'Khách Hàng (Client)' }}
                                     </span>
                                 </div>
 
-                                @if (auth()->user()->hasAnyRole(['super_admin', 'admin']))
-                                    <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-3 px-4 py-2 text-sm text-indigo-600 hover:bg-indigo-50 font-semibold transition">
-                                        <span class="material-symbols-outlined text-lg">admin_panel_settings</span>
-                                        <span>Trang quản trị</span>
+                                <div class="py-1 text-sm font-medium text-slate-700">
+                                    <a href="{{ route('my-bookings') }}" class="flex items-center gap-3 px-4 py-2 hover:bg-slate-50 transition">
+                                        <span class="material-symbols-outlined text-slate-400 text-lg">confirmation_number</span>
+                                        <span>Đơn đặt của tôi</span>
                                     </a>
-                                @endif
-
-                                <a href="{{ route('profile.show') }}" class="flex items-center gap-3 px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-blue-50 hover:text-blue-700 transition">
-                                    <span class="material-symbols-outlined text-lg">account_balance_wallet</span>
-                                    <span>Hồ sơ &amp; Ví thể thao</span>
-                                </a>
+                                    @if(Auth::user()->isAdmin())
+                                        <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-3 px-4 py-2 text-indigo-600 hover:bg-indigo-50 font-semibold transition">
+                                            <span class="material-symbols-outlined text-lg">admin_panel_settings</span>
+                                            <span>Trang Quản Trị Admin &rarr;</span>
+                                        </a>
+                                    @endif
+                                </div>
 
                                 <div class="border-t border-slate-100 pt-1">
                                     <form method="POST" action="{{ route('logout') }}">
                                         @csrf
-                                        <button type="submit" class="w-full flex items-center gap-3 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 transition text-left bg-transparent border-0 cursor-pointer">
+                                        <button type="submit" class="w-full flex items-center gap-3 px-4 py-2 text-sm font-medium text-rose-600 hover:bg-rose-50 transition text-left">
                                             <span class="material-symbols-outlined text-lg">logout</span>
                                             <span>Đăng xuất</span>
                                         </button>
@@ -117,13 +107,11 @@
                             </div>
                         </div>
                     @else
-                        <a href="{{ route('register') }}" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold text-blue-700 bg-blue-50 hover:bg-blue-100 transition">
-                            <span class="material-symbols-outlined text-lg">person_add</span>
-                            <span>Đăng ký</span>
+                        <a href="{{ route('login') }}" class="px-4 py-2 rounded-xl text-sm font-semibold text-slate-700 hover:bg-slate-100 transition">
+                            Đăng nhập
                         </a>
-                        <a href="{{ route('login') }}" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold text-white bg-blue-600 hover:bg-blue-700 shadow-sm shadow-blue-500/20 transition">
-                            <span class="material-symbols-outlined text-lg">login</span>
-                            <span>Đăng nhập</span>
+                        <a href="{{ route('register') }}" class="px-4 py-2 rounded-xl text-sm font-bold text-white bg-blue-600 hover:bg-blue-700 shadow-sm shadow-blue-500/20 transition">
+                            Đăng ký
                         </a>
                     @endauth
 
@@ -137,43 +125,42 @@
             <!-- Mobile Navigation Drawer -->
             <div x-show="mobileMenuOpen" x-transition class="md:hidden py-4 border-t border-slate-200 space-y-2">
                 <a href="{{ route('home') }}" class="block px-3 py-2 rounded-xl text-sm font-bold text-blue-600 bg-blue-50">Khám Phá Sân</a>
-                <a href="javascript:void(0)" class="block px-3 py-2 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-50">Ghép Kèo</a>
-                <a href="javascript:void(0)" class="block px-3 py-2 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-50">Ưu Đãi &amp; Voucher</a>
-                <a href="javascript:void(0)" class="block px-3 py-2 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-50">Academy HLV</a>
-                <a href="javascript:void(0)" class="block px-3 py-2 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-50">Badminton Hub</a>
-                <div class="pt-2 border-t border-slate-100">
-                    @auth
-                        @if (auth()->user()->hasAnyRole(['super_admin', 'admin']))
+                @auth
+                    <a href="{{ route('my-bookings') }}" class="block px-3 py-2 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-50">Đơn Đặt Của Tôi</a>
+                    @if(Auth::user()->isAdmin())
+                        <div class="pt-2 border-t border-slate-100">
                             <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-2 px-3 py-2.5 rounded-xl text-sm font-bold text-white bg-indigo-600 hover:bg-indigo-700">
                                 <span class="material-symbols-outlined text-lg">admin_panel_settings</span>
-                                <span>Mở Dashboard Admin</span>
+                                <span>Khu Vực Quản Trị</span>
                             </a>
-                        @endif
-                        <a href="{{ route('profile.show') }}" class="flex items-center gap-2 px-3 py-2.5 rounded-xl text-sm font-bold text-blue-700 bg-blue-50 hover:bg-blue-100 mb-2">
-                            <span class="material-symbols-outlined text-lg">account_balance_wallet</span>
-                            <span>Hồ sơ &amp; Ví thể thao</span>
-                        </a>
-                        <form method="POST" action="{{ route('logout') }}" class="mt-2">
-                            @csrf
-                            <button type="submit" class="flex w-full items-center gap-2 px-3 py-2.5 rounded-xl text-sm font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 transition">
-                                <span class="material-symbols-outlined text-lg">logout</span>
-                                <span>Đăng xuất</span>
-                            </button>
-                        </form>
-                    @else
-                        <a href="{{ route('register') }}" class="flex items-center gap-2 px-3 py-2.5 rounded-xl text-sm font-bold text-blue-700 bg-blue-50 hover:bg-blue-100 mb-2">
-                            <span class="material-symbols-outlined text-lg">person_add</span>
-                            <span>Đăng ký thành viên</span>
-                        </a>
-                        <a href="{{ route('login') }}" class="flex items-center gap-2 px-3 py-2.5 rounded-xl text-sm font-bold text-white bg-blue-600 hover:bg-blue-700">
-                            <span class="material-symbols-outlined text-lg">login</span>
-                            <span>Đăng nhập</span>
-                        </a>
-                    @endauth
-                </div>
+                        </div>
+                    @endif
+                @else
+                    <div class="pt-2 border-t border-slate-100 flex gap-2">
+                        <a href="{{ route('login') }}" class="flex-1 text-center py-2 rounded-xl text-sm font-semibold text-slate-700 bg-slate-100">Đăng nhập</a>
+                        <a href="{{ route('register') }}" class="flex-1 text-center py-2 rounded-xl text-sm font-bold text-white bg-blue-600">Đăng ký</a>
+                    </div>
+                @endauth
             </div>
         </div>
     </header>
+
+    <!-- Global Alert Notifications -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4">
+        @if(session('success'))
+            <div class="p-4 mb-4 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-sm flex items-center gap-3 shadow-sm">
+                <span class="material-symbols-outlined text-emerald-600 text-xl">check_circle</span>
+                <span class="font-medium">{{ session('success') }}</span>
+            </div>
+        @endif
+
+        @if(session('error'))
+            <div class="p-4 mb-4 rounded-2xl bg-rose-50 border border-rose-200 text-rose-800 text-sm flex items-center gap-3 shadow-sm">
+                <span class="material-symbols-outlined text-rose-600 text-xl">error</span>
+                <span class="font-medium">{{ session('error') }}</span>
+            </div>
+        @endif
+    </div>
 
     <!-- Main Content Area -->
     <main class="flex-1">
@@ -182,7 +169,7 @@
 
     <!-- Footer -->
     <footer class="bg-slate-900 text-slate-400 py-12 border-t border-slate-800 mt-20">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-4 gap-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-3 gap-8">
             <div class="space-y-4">
                 <div class="flex items-center gap-2">
                     <div class="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center text-white">
@@ -190,32 +177,26 @@
                     </div>
                     <span class="font-headline font-bold text-xl text-white">Go<span class="text-blue-500">Sport</span></span>
                 </div>
-                <p class="text-xs leading-relaxed text-slate-400">Hệ thống quản lý và đặt sân cầu lông số 1 Việt Nam. Tích hợp thanh toán an toàn, mở cửa barrier IoT thông minh và cộng đồng ghép kèo lông thủ đỉnh cao.</p>
+                <p class="text-xs leading-relaxed text-slate-400">Hệ thống quản lý và đặt sân cầu lông chuyên nghiệp. Tìm kiếm sân nhanh chóng, kiểm tra lịch trống chính xác và xác nhận đặt sân tiện lợi.</p>
                 <div class="flex items-center gap-2 text-xs text-slate-300">
-                    <span class="material-symbols-outlined text-sm text-blue-500">verified</span>
-                    <span>Thanh toán VNPay &amp; VietQR an toàn</span>
+                    <span class="material-symbols-outlined text-sm text-blue-500">payments</span>
+                    <span>Thanh toán trực tiếp tại sân</span>
                 </div>
             </div>
 
             <div>
-                <h4 class="font-bold text-sm text-white mb-4">Cụm Sân GoSport</h4>
+                <h4 class="font-bold text-sm text-white mb-4">Liên Kết Nhanh</h4>
                 <ul class="space-y-2 text-xs">
-                    <li><a href="javascript:void(0)" class="hover:text-white transition">GoSport Arena Cầu Giấy (12 sân)</a></li>
-                    <li><a href="javascript:void(0)" class="hover:text-white transition">GoSport Premium Mỹ Đình (8 sân)</a></li>
-                    <li><a href="javascript:void(0)" class="hover:text-white transition">GoSport Star Thanh Xuân (6 sân)</a></li>
-                    <li><span class="text-emerald-400 flex items-center gap-1">
-                        <span class="material-symbols-outlined text-sm">sensors</span> Kiosk Tự Check-in Barrier
-                    </span></li>
-                </ul>
-            </div>
-
-            <div>
-                <h4 class="font-bold text-sm text-white mb-4">Dịch Vụ &amp; Tiện Ích</h4>
-                <ul class="space-y-2 text-xs">
-                    <li><a href="javascript:void(0)" class="hover:text-white transition">Sàn Ghép Kèo Đấu</a></li>
-                    <li><a href="javascript:void(0)" class="hover:text-white transition">Học Viện GoSport Academy</a></li>
-                    <li><a href="javascript:void(0)" class="hover:text-white transition">Gói Thẻ Hội Viên VIP</a></li>
-                    <li><a href="javascript:void(0)" class="hover:text-white transition">Cẩm Nang Kỹ Thuật Badminton</a></li>
+                    <li><a href="{{ route('home') }}" class="hover:text-white transition">Khám Phá Cụm Sân</a></li>
+                    @auth
+                        <li><a href="{{ route('my-bookings') }}" class="hover:text-white transition">Lịch Đặt Của Tôi</a></li>
+                        @if(Auth::user()->isAdmin())
+                            <li><a href="{{ route('admin.dashboard') }}" class="hover:text-white transition text-indigo-400">Trang Quản Trị Admin</a></li>
+                        @endif
+                    @else
+                        <li><a href="{{ route('login') }}" class="hover:text-white transition">Đăng Nhập Khách Hàng</a></li>
+                        <li><a href="{{ route('register') }}" class="hover:text-white transition">Đăng Ký Tài Khoản</a></li>
+                    @endauth
                 </ul>
             </div>
 
@@ -225,7 +206,7 @@
                 <p class="text-xs mb-2"><span class="text-slate-300">Email:</span> support@gosport.vn</p>
                 <p class="text-xs"><span class="text-slate-300">Địa chỉ:</span> 26 Phạm Văn Đồng, Cầu Giấy, Hà Nội</p>
                 <div class="mt-4 pt-4 border-t border-slate-800 text-[11px] text-slate-500">
-                    &copy; 2026 GoSport Badminton System. All rights reserved.
+                    &copy; {{ date('Y') }} GoSport Badminton System. All rights reserved.
                 </div>
             </div>
         </div>

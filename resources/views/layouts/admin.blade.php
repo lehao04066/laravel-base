@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>@yield('title', 'GoSport Admin - Trung Tâm Quản Trị Vận Hành Đấu Trường')</title>
+    <title>@yield('title', 'GoSport Admin - Trung Tâm Quản Trị Vận Hành Sân')</title>
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -64,167 +64,120 @@
 
         <!-- Navigation Menu -->
         <div class="flex-1 px-3 py-6 space-y-1 overflow-y-auto">
-            <div class="px-3 pb-2 text-[10px] font-bold tracking-wider text-slate-500 uppercase">Vận Hành Sân</div>
+            <div class="px-3 pb-2 text-[10px] font-bold tracking-wider text-slate-500 uppercase">Quản Trị Hệ Thống</div>
             
-            <!-- Active Dashboard Link -->
-            <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold transition bg-blue-600 text-white shadow-md shadow-blue-500/25">
+            <!-- Dashboard Link -->
+            <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold transition {{ request()->routeIs('admin.dashboard') ? 'bg-blue-600 text-white shadow-md shadow-blue-500/25' : 'hover:bg-slate-800 hover:text-white text-slate-400' }}">
                 <span class="material-symbols-outlined text-lg">monitoring</span>
                 <span>Báo Cáo &amp; Chỉ Số</span>
             </a>
 
-            <!-- Disabled Sidebar Items outside scope -->
-            <div class="flex items-center justify-between px-3 py-2 rounded-xl text-sm font-medium text-slate-500 cursor-not-allowed">
-                <div class="flex items-center gap-3">
-                    <span class="material-symbols-outlined text-lg text-slate-600">calendar_view_week</span>
-                    <span>Live Timeline Sân</span>
-                </div>
-                <span class="text-[9px] font-bold px-1.5 py-0.5 rounded bg-slate-800 text-slate-500 uppercase">Sắp mở</span>
-            </div>
-
-            <div class="flex items-center justify-between px-3 py-2 rounded-xl text-sm font-medium text-slate-500 cursor-not-allowed">
-                <div class="flex items-center gap-3">
-                    <span class="material-symbols-outlined text-lg text-slate-600">payments</span>
-                    <span>Cấu Hình Bảng Giá</span>
-                </div>
-                <span class="text-[9px] font-bold px-1.5 py-0.5 rounded bg-slate-800 text-slate-500 uppercase">Sắp mở</span>
-            </div>
-
-            <div class="flex items-center justify-between px-3 py-2 rounded-xl text-sm font-medium text-slate-500 cursor-not-allowed">
-                <div class="flex items-center gap-3">
-                    <span class="material-symbols-outlined text-lg text-slate-600">stadium</span>
-                    <span>Cấu Hình Smart Arena</span>
-                </div>
-                <span class="text-[9px] font-bold px-1.5 py-0.5 rounded bg-slate-800 text-slate-500 uppercase">Sắp mở</span>
-            </div>
-
-            <div class="flex items-center justify-between px-3 py-2 rounded-xl text-sm font-medium text-slate-500 cursor-not-allowed">
-                <div class="flex items-center gap-3">
-                    <span class="material-symbols-outlined text-lg text-slate-600">sensors</span>
-                    <span>Hệ Thống Thiết Bị IoT</span>
-                </div>
-                <span class="text-[9px] font-bold px-1.5 py-0.5 rounded bg-slate-800 text-slate-500 uppercase">Sắp mở</span>
-            </div>
-
-            <div class="pt-4 px-3 pb-2 text-[10px] font-bold tracking-wider text-slate-500 uppercase">Khách Hàng &amp; CRM</div>
-
-            <div class="flex items-center justify-between px-3 py-2 rounded-xl text-sm font-medium text-slate-500 cursor-not-allowed">
-                <div class="flex items-center gap-3">
-                    <span class="material-symbols-outlined text-lg text-slate-600">contacts</span>
-                    <span>CRM &amp; Lịch Cố Định</span>
-                </div>
-                <span class="text-[9px] font-bold px-1.5 py-0.5 rounded bg-slate-800 text-slate-500 uppercase">Sắp mở</span>
-            </div>
-
-            <div class="flex items-center justify-between px-3 py-2 rounded-xl text-sm font-medium text-slate-500 cursor-not-allowed">
-                <div class="flex items-center gap-3">
-                    <span class="material-symbols-outlined text-lg text-slate-600">rate_review</span>
-                    <span>Đánh Giá Khách Hàng</span>
-                </div>
-                <span class="text-[9px] font-bold px-1.5 py-0.5 rounded bg-slate-800 text-slate-500 uppercase">Sắp mở</span>
-            </div>
-
-            <div class="pt-4 px-3 pb-2 text-[10px] font-bold tracking-wider text-slate-500 uppercase">Kho &amp; Nhân Sự</div>
-
-            <div class="flex items-center justify-between px-3 py-2 rounded-xl text-sm font-medium text-slate-500 cursor-not-allowed">
-                <div class="flex items-center gap-3">
-                    <span class="material-symbols-outlined text-lg text-slate-600">inventory_2</span>
-                    <span>Kho &amp; Căng Vợt</span>
-                </div>
-                <span class="text-[9px] font-bold px-1.5 py-0.5 rounded bg-slate-800 text-slate-500 uppercase">Sắp mở</span>
-            </div>
-
-            <div class="flex items-center justify-between px-3 py-2 rounded-xl text-sm font-medium text-slate-500 cursor-not-allowed">
-                <div class="flex items-center gap-3">
-                    <span class="material-symbols-outlined text-lg text-slate-600">badge</span>
-                    <span>Nhân Sự &amp; Phân Ca</span>
-                </div>
-                <span class="text-[9px] font-bold px-1.5 py-0.5 rounded bg-slate-800 text-slate-500 uppercase">Sắp mở</span>
-            </div>
-
-            <div class="flex items-center justify-between px-3 py-2 rounded-xl text-sm font-medium text-slate-500 cursor-not-allowed">
-                <div class="flex items-center gap-3">
-                    <span class="material-symbols-outlined text-lg text-slate-600">emoji_events</span>
-                    <span>Quản Lý Giải Đấu</span>
-                </div>
-                <span class="text-[9px] font-bold px-1.5 py-0.5 rounded bg-slate-800 text-slate-500 uppercase">Sắp mở</span>
-            </div>
-
-            <div class="pt-4 px-3 pb-2 text-[10px] font-bold tracking-wider text-slate-500 uppercase">Liên Kết Ngoài</div>
-
-            <!-- Working link to Home -->
-            <a href="{{ route('home') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold text-blue-400 hover:bg-slate-800 hover:text-blue-300 transition">
-                <span class="material-symbols-outlined text-lg">arrow_back</span>
-                <span>Về Website Khách Hàng</span>
+            <!-- Venues & Courts Link -->
+            <a href="{{ route('admin.venues.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold transition {{ request()->routeIs('admin.venues.*') ? 'bg-blue-600 text-white shadow-md shadow-blue-500/25' : 'hover:bg-slate-800 hover:text-white text-slate-400' }}">
+                <span class="material-symbols-outlined text-lg">stadium</span>
+                <span>Cụm Sân &amp; Sân Con</span>
             </a>
 
-            <div class="flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium text-slate-500 cursor-not-allowed">
-                <span class="material-symbols-outlined text-lg text-slate-600">desktop_windows</span>
-                <span>Bàn Làm Việc Lễ Tân</span>
-            </div>
+            <!-- Pricing & Operating Hours Link -->
+            <a href="{{ route('admin.pricing.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold transition {{ request()->routeIs('admin.pricing.*') ? 'bg-blue-600 text-white shadow-md shadow-blue-500/25' : 'hover:bg-slate-800 hover:text-white text-slate-400' }}">
+                <span class="material-symbols-outlined text-lg">payments</span>
+                <span>Giờ Mở Cửa &amp; Bảng Giá</span>
+            </a>
 
-            <div class="flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium text-slate-500 cursor-not-allowed">
-                <span class="material-symbols-outlined text-lg text-slate-600">point_of_sale</span>
-                <span>Thu Ngân POS</span>
-            </div>
+            <!-- Bookings Management Link -->
+            <a href="{{ route('admin.bookings.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold transition {{ request()->routeIs('admin.bookings.*') ? 'bg-blue-600 text-white shadow-md shadow-blue-500/25' : 'hover:bg-slate-800 hover:text-white text-slate-400' }}">
+                <span class="material-symbols-outlined text-lg">confirmation_number</span>
+                <span>Quản Lý Đơn Đặt Sân</span>
+            </a>
+
+            <div class="pt-6 px-3 pb-2 text-[10px] font-bold tracking-wider text-slate-500 uppercase">Khác</div>
+
+            <a href="{{ route('home') }}" target="_blank" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold text-slate-400 hover:bg-slate-800 hover:text-white transition">
+                <span class="material-symbols-outlined text-lg text-emerald-400">open_in_new</span>
+                <span>Xem Trang Khách Hàng</span>
+            </a>
         </div>
 
-        <!-- Current Admin Info -->
-        <div class="p-4 border-t border-slate-800 flex items-center justify-between">
-            <div class="flex items-center gap-3 overflow-hidden">
-                <div class="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-white font-bold text-xs shrink-0">
-                    <span class="material-symbols-outlined text-base">person</span>
-                </div>
-                <div class="truncate">
-                    <p class="text-xs font-bold text-white truncate">{{ auth()->user()->name }}</p>
-                    <p class="text-[10px] text-slate-400 truncate">{{ auth()->user()->email }}</p>
-                </div>
-            </div>
-            <span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
-                Online
-            </span>
-        </div>
-    </aside>
-
-    <!-- Main Content Wrapper -->
-    <div class="flex-1 flex flex-col min-w-0 overflow-y-auto">
-        <!-- Admin Topbar -->
-        <header class="h-18 bg-white border-b border-slate-200 flex items-center justify-between px-4 sm:px-8 sticky top-0 z-30">
-            <div class="flex items-center gap-3">
-                <!-- Mobile Sidebar Toggle -->
-                <button @click="sidebarOpen = !sidebarOpen" class="lg:hidden p-2 rounded-xl text-slate-600 hover:bg-slate-100 transition focus:outline-none" aria-label="Toggle sidebar">
-                    <span class="material-symbols-outlined text-2xl">menu</span>
-                </button>
-                <div>
-                    <h1 class="text-base sm:text-lg font-bold text-slate-900 font-headline">@yield('page_title', 'Bảng Điều Khiển Quản Trị')</h1>
-                    <p class="text-[11px] sm:text-xs text-slate-400 hidden sm:block">Hệ Thống Quản Lý Đấu Trường Cầu Lông GoSport</p>
-                </div>
-            </div>
-
-            <div class="flex items-center gap-3 sm:gap-4">
-                <div class="hidden md:flex items-center gap-2 px-3 py-1.5 bg-slate-100 rounded-xl text-xs font-semibold text-slate-600">
-                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                    <span>Cụm Sân: GoSport Arena Cầu Giấy (12 sân)</span>
+        <!-- Sidebar Bottom: Admin User Info & Logout -->
+        <div class="p-4 border-t border-slate-800 bg-slate-900/50">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-3 min-w-0">
+                    <div class="w-9 h-9 rounded-full bg-indigo-600 text-white font-bold flex items-center justify-center text-sm shrink-0">
+                        A
+                    </div>
+                    <div class="min-w-0">
+                        <p class="text-xs font-bold text-white truncate">{{ Auth::user()->name ?? 'Admin' }}</p>
+                        <p class="text-[10px] text-slate-400 truncate">{{ Auth::user()->email ?? 'admin@gosport.vn' }}</p>
+                    </div>
                 </div>
 
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
-                    <button type="submit" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-700 text-xs font-bold transition">
-                        <span class="material-symbols-outlined text-sm">logout</span>
-                        <span class="hidden sm:inline">Đăng xuất</span>
+                    <button type="submit" title="Đăng xuất" class="p-1.5 text-slate-400 hover:text-rose-400 transition">
+                        <span class="material-symbols-outlined text-xl">logout</span>
                     </button>
                 </form>
+            </div>
+        </div>
+    </aside>
 
-                <a href="{{ route('home') }}" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition">
-                    <span class="material-symbols-outlined text-sm">home</span>
+    <!-- Main Content Wrapper -->
+    <div class="flex-1 flex flex-col min-w-0 overflow-hidden">
+        
+        <!-- Top Header Bar -->
+        <header class="h-18 bg-white border-b border-slate-200 px-4 sm:px-8 flex items-center justify-between sticky top-0 z-30 shadow-xs">
+            <div class="flex items-center gap-3">
+                <button @click="sidebarOpen = true" class="lg:hidden p-2 rounded-xl text-slate-600 hover:bg-slate-100">
+                    <span class="material-symbols-outlined text-2xl">menu</span>
+                </button>
+                <h2 class="text-base sm:text-lg font-bold text-slate-900 font-headline">
+                    @yield('page_title', 'GoSport Quản Trị')
+                </h2>
+            </div>
+
+            <div class="flex items-center gap-3">
+                <a href="{{ route('home') }}" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold text-slate-600 hover:bg-slate-100 border border-slate-200 transition">
+                    <span class="material-symbols-outlined text-base">visibility</span>
                     <span class="hidden sm:inline">Trang Chủ</span>
                 </a>
+
+                <div class="w-8 h-8 rounded-full bg-blue-600 text-white font-bold flex items-center justify-center text-xs">
+                    {{ strtoupper(substr(Auth::user()->name ?? 'A', 0, 1)) }}
+                </div>
             </div>
         </header>
 
-        <!-- Content Area -->
-        <div class="p-4 sm:p-8">
+        <!-- Main Body Area -->
+        <main class="flex-1 p-4 sm:p-8 overflow-y-auto">
+            @if(session('success'))
+                <div class="p-4 mb-6 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-sm flex items-center gap-3 shadow-sm">
+                    <span class="material-symbols-outlined text-emerald-600 text-xl">check_circle</span>
+                    <span class="font-medium">{{ session('success') }}</span>
+                </div>
+            @endif
+
+            @if(session('error'))
+                <div class="p-4 mb-6 rounded-2xl bg-rose-50 border border-rose-200 text-rose-800 text-sm flex items-center gap-3 shadow-sm">
+                    <span class="material-symbols-outlined text-rose-600 text-xl">error</span>
+                    <span class="font-medium">{{ session('error') }}</span>
+                </div>
+            @endif
+
+            @if($errors->any())
+                <div class="p-4 mb-6 rounded-2xl bg-rose-50 border border-rose-200 text-rose-800 text-sm shadow-sm space-y-1">
+                    <div class="font-bold flex items-center gap-1">
+                        <span class="material-symbols-outlined text-base">warning</span> Có lỗi xảy ra:
+                    </div>
+                    <ul class="list-disc pl-5 text-xs">
+                        @foreach($errors->all() as $err)
+                            <li>{{ $err }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
             @yield('content')
-        </div>
+        </main>
     </div>
 
     @stack('scripts')

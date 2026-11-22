@@ -1,64 +1,72 @@
 <?php
 
+use App\Http\Controllers\AdminBookingController;
+use App\Http\Controllers\AdminCourtController;
+use App\Http\Controllers\AdminDashboardController;
+use App\Http\Controllers\AdminPricingController;
+use App\Http\Controllers\AdminVenueController;
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\CoachDashboardController;
+use App\Http\Controllers\CourtBookingController;
+use App\Http\Controllers\CustomerBookingController;
 use App\Http\Controllers\ExploreController;
-use App\Http\Controllers\WalletController;
 use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
-| Web Routes - GoSport Badminton System on Laravel Base
+| Web Routes - GoSport Badminton System
 |--------------------------------------------------------------------------
 */
 
-// CV01: Khám phá cụm sân & Bộ lọc đa tiêu chí
+// Public Client Routes
 Route::get('/', [ExploreController::class, 'index'])->name('home');
 Route::get('/explore', [ExploreController::class, 'index'])->name('explore');
-
-// Dashboard Admin (Giao diện quản trị GoSport)
-Route::view('/admin', 'admin.dashboard')
-    ->middleware(['auth', 'roles:super_admin,admin'])
-    ->name('admin.dashboard');
+Route::get('/venues/{slug}', [CourtBookingController::class, 'showVenue'])->name('venues.show');
+Route::get('/venue/{slug}', [CourtBookingController::class, 'showVenue'])->name('explore.venue');
+Route::get('/api/courts/{id}/slots', [CourtBookingController::class, 'getSlotsApi'])->name('api.courts.slots');
 
 // Authentication Routes
-Route::middleware('guest')->group(function (): void {
-    Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
-    Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:10,1');
-    Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
-    Route::post('/register', [AuthController::class, 'register'])->middleware('throttle:5,1');
+Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
+Route::post('/login', [AuthController::class, 'login']);
+Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
+Route::post('/register', [AuthController::class, 'register']);
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
+// Authenticated Client Routes
+Route::middleware(['auth'])->group(function () {
+    Route::post('/booking/submit', [CourtBookingController::class, 'submitBooking'])->name('booking.submit');
+    Route::get('/my-bookings', [CustomerBookingController::class, 'index'])->name('my-bookings');
+    Route::get('/my-bookings/list', [CustomerBookingController::class, 'index'])->name('my-bookings.index');
+    Route::get('/my-bookings/{id}', [CustomerBookingController::class, 'show'])->name('my-bookings.show');
+    Route::post('/my-bookings/{id}/cancel', [CustomerBookingController::class, 'cancel'])->name('my-bookings.cancel');
 });
 
-Route::middleware('auth')->group(function (): void {
-    Route::get('/profile', [WalletController::class, 'show'])->name('profile.show');
-    Route::post('/profile/topup', [WalletController::class, 'topup'])
-        ->middleware('throttle:5,1')
-        ->name('profile.topup');
+// Admin Operations & Management Portal Routes (Strict Server-Side Authorization)
+Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/', [AdminDashboardController::class, 'index'])->name('dashboard');
 
-    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+    // Venues (Cụm sân)
+    Route::get('/venues', [AdminVenueController::class, 'index'])->name('venues.index');
+    Route::get('/venues/create', [AdminVenueController::class, 'create'])->name('venues.create');
+    Route::post('/venues', [AdminVenueController::class, 'store'])->name('venues.store');
+    Route::get('/venues/{id}/edit', [AdminVenueController::class, 'edit'])->name('venues.edit');
+    Route::put('/venues/{id}', [AdminVenueController::class, 'update'])->name('venues.update');
+    Route::post('/venues/{id}/toggle', [AdminVenueController::class, 'toggleActive'])->name('venues.toggle');
 
-    Route::view('/dashboard/admin', 'admin.dashboard')
-        ->middleware('roles:super_admin,admin')
-        ->name('dashboard.admin');
+    // Child Courts (Sân con)
+    Route::post('/venues/{venueId}/courts', [AdminCourtController::class, 'store'])->name('courts.store');
+    Route::put('/courts/{id}', [AdminCourtController::class, 'update'])->name('courts.update');
+    Route::post('/courts/{id}/toggle', [AdminCourtController::class, 'toggleActive'])->name('courts.toggle');
+    Route::delete('/courts/{id}', [AdminCourtController::class, 'destroy'])->name('courts.destroy');
 
-    Route::view('/dashboard/owner', 'auth.role-dashboard', [
-        'dashboardType' => 'owner',
-        'roleLabel' => 'Chủ sân',
-        'roleDescription' => 'Theo dõi hoạt động và cơ sở sân của bạn.',
-    ])->middleware('roles:owner')->name('dashboard.owner');
+    // Operating Hours & Hourly Pricing Rules (Giờ hoạt động & Bảng giá theo giờ)
+    Route::get('/pricing', [AdminPricingController::class, 'index'])->name('pricing.index');
+    Route::post('/pricing', [AdminPricingController::class, 'update'])->name('pricing.update');
+    Route::post('/pricing/rule', [AdminPricingController::class, 'storeRule'])->name('pricing.storeRule');
+    Route::delete('/pricing/rule/{id}', [AdminPricingController::class, 'destroyRule'])->name('pricing.destroyRule');
+    Route::post('/pricing/operating-hours', [AdminPricingController::class, 'updateOperatingHours'])->name('pricing.operatingHours');
 
-    Route::view('/dashboard/staff', 'auth.role-dashboard', [
-        'dashboardType' => 'staff',
-        'roleLabel' => 'Nhân viên',
-        'roleDescription' => 'Truy cập công cụ hỗ trợ vận hành và phục vụ khách hàng.',
-    ])->middleware('roles:staff')->name('dashboard.staff');
-
-    Route::get('/dashboard/coach', CoachDashboardController::class)
-        ->middleware('roles:coach')
-        ->name('dashboard.coach');
-
-    Route::view('/dashboard/customer', 'auth.dashboard', [
-        'roleLabel' => 'Thành viên',
-        'roleDescription' => 'Đặt sân và kết nối với cộng đồng GoSport.',
-    ])->middleware('roles:customer')->name('dashboard.customer');
+    // Bookings Management (Quản lý đơn đặt sân)
+    Route::get('/bookings', [AdminBookingController::class, 'index'])->name('bookings.index');
+    Route::get('/bookings/{id}', [AdminBookingController::class, 'show'])->name('bookings.show');
+    Route::post('/bookings/{id}/cancel', [AdminBookingController::class, 'cancel'])->name('bookings.cancel');
 });
