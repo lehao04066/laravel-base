@@ -25,6 +25,12 @@
         }
     </style>
     @stack('styles')
+    @guest
+        <style>
+            @media (min-width: 768px) { nav a[href="{{ route('hub') }}"] { order: 2; } }
+            @media (max-width: 767px) { div[x-show="mobileMenuOpen"] { display: flex !important; flex-direction: column; } div[x-show="mobileMenuOpen"] a[href="{{ route('hub') }}"] { order: 1; } }
+        </style>
+    @endguest
 </head>
 <body class="min-h-full flex flex-col bg-[#F8FAFC]" x-data="{ mobileMenuOpen: false }">
 
