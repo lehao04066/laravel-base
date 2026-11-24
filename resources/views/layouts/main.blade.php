@@ -48,6 +48,7 @@
                     <nav class="hidden md:flex items-center gap-1 text-sm font-semibold text-slate-600">
                         <a href="{{ route('home') }}" class="px-3 py-2 rounded-lg {{ request()->routeIs('home', 'explore', 'venues.*') ? 'text-blue-600 bg-blue-50 font-bold' : 'hover:text-blue-600 hover:bg-blue-50/50' }} transition">Khám Phá Sân</a>
                         @auth
+                            <a href="{{ route('matchmaking.index') }}" class="px-3 py-2 rounded-lg {{ request()->routeIs('matchmaking.*') ? 'text-blue-600 bg-blue-50 font-bold' : 'hover:text-blue-600 hover:bg-blue-50/50' }} transition">Ghép Kèo</a>
                             <a href="{{ route('my-bookings') }}" class="px-3 py-2 rounded-lg {{ request()->routeIs('my-bookings*') ? 'text-blue-600 bg-blue-50 font-bold' : 'hover:text-blue-600 hover:bg-blue-50/50' }} transition">Đơn Đặt Của Tôi</a>
                         @endauth
                     </nav>
@@ -126,6 +127,7 @@
             <div x-show="mobileMenuOpen" x-transition class="md:hidden py-4 border-t border-slate-200 space-y-2">
                 <a href="{{ route('home') }}" class="block px-3 py-2 rounded-xl text-sm font-bold text-blue-600 bg-blue-50">Khám Phá Sân</a>
                 @auth
+                    <a href="{{ route('matchmaking.index') }}" class="block px-3 py-2 rounded-xl text-sm font-medium {{ request()->routeIs('matchmaking.*') ? 'text-blue-600 bg-blue-50 font-bold' : 'text-slate-600 hover:bg-slate-50' }}">Ghép Kèo</a>
                     <a href="{{ route('my-bookings') }}" class="block px-3 py-2 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-50">Đơn Đặt Của Tôi</a>
                     @if(Auth::user()->isAdmin())
                         <div class="pt-2 border-t border-slate-100">

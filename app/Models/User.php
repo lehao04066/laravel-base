@@ -48,4 +48,14 @@ class User extends Authenticatable
     {
         return $this->hasMany(Booking::class);
     }
+
+    public function matchPosts(): HasMany
+    {
+        return $this->hasMany(MatchPost::class);
+    }
+
+    public function matchParticipations(): HasMany
+    {
+        return $this->hasMany(MatchParticipant::class);
+    }
 }
