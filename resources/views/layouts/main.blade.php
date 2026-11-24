@@ -46,8 +46,12 @@
 
                     <!-- Desktop Navigation Links -->
                     <nav class="hidden md:flex items-center gap-1 text-sm font-semibold text-slate-600">
+                        @guest
+                            <a href="{{ route('hub') }}" class="px-3 py-2 rounded-lg {{ request()->routeIs('hub*') ? 'text-blue-600 bg-blue-50 font-bold' : 'hover:text-blue-600 hover:bg-blue-50/50' }} transition">Cẩm Nang</a>
+                        @endguest
                         <a href="{{ route('home') }}" class="px-3 py-2 rounded-lg {{ request()->routeIs('home', 'explore', 'venues.*') ? 'text-blue-600 bg-blue-50 font-bold' : 'hover:text-blue-600 hover:bg-blue-50/50' }} transition">Khám Phá Sân</a>
                         @auth
+                            <a href="{{ route('hub') }}" class="px-3 py-2 rounded-lg {{ request()->routeIs('hub*') ? 'text-blue-600 bg-blue-50 font-bold' : 'hover:text-blue-600 hover:bg-blue-50/50' }} transition">Cẩm Nang</a>
                             <a href="{{ route('matchmaking') }}" class="px-3 py-2 rounded-lg {{ request()->routeIs('matchmaking*') ? 'text-blue-600 bg-blue-50 font-bold' : 'hover:text-blue-600 hover:bg-blue-50/50' }} transition">Ghép Kèo</a>
                             <a href="{{ route('my-bookings') }}" class="px-3 py-2 rounded-lg {{ request()->routeIs('my-bookings*') ? 'text-blue-600 bg-blue-50 font-bold' : 'hover:text-blue-600 hover:bg-blue-50/50' }} transition">Đơn Đặt Của Tôi</a>
                         @endauth
@@ -125,8 +129,12 @@
 
             <!-- Mobile Navigation Drawer -->
             <div x-show="mobileMenuOpen" x-transition class="md:hidden py-4 border-t border-slate-200 space-y-2">
+                @guest
+                    <a href="{{ route('hub') }}" class="block px-3 py-2 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-50">Cẩm Nang</a>
+                @endguest
                 <a href="{{ route('home') }}" class="block px-3 py-2 rounded-xl text-sm font-bold text-blue-600 bg-blue-50">Khám Phá Sân</a>
                 @auth
+                    <a href="{{ route('hub') }}" class="block px-3 py-2 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-50">Cẩm Nang</a>
                     <a href="{{ route('matchmaking') }}" class="block px-3 py-2 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-50">Ghép Kèo</a>
                     <a href="{{ route('my-bookings') }}" class="block px-3 py-2 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-50">Đơn Đặt Của Tôi</a>
                     @if(Auth::user()->isAdmin())
@@ -189,8 +197,12 @@
             <div>
                 <h4 class="font-bold text-sm text-white mb-4">Liên Kết Nhanh</h4>
                 <ul class="space-y-2 text-xs">
+                    @guest
+                        <li><a href="{{ route('hub') }}" class="hover:text-white transition">Cẩm Nang</a></li>
+                    @endguest
                     <li><a href="{{ route('home') }}" class="hover:text-white transition">Khám Phá Cụm Sân</a></li>
                     @auth
+                        <li><a href="{{ route('hub') }}" class="hover:text-white transition">Cẩm Nang</a></li>
                         <li><a href="{{ route('matchmaking') }}" class="hover:text-white transition">Ghép Kèo</a></li>
                         <li><a href="{{ route('my-bookings') }}" class="hover:text-white transition">Lịch Đặt Của Tôi</a></li>
                         @if(Auth::user()->isAdmin())

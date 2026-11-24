@@ -7,6 +7,7 @@ use App\Http\Controllers\AdminPricingController;
 use App\Http\Controllers\AdminVenueController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CourtBookingController;
+use App\Http\Controllers\ContentHubController;
 use App\Http\Controllers\CustomerBookingController;
 use App\Http\Controllers\ExploreController;
 use App\Http\Controllers\MatchmakingController;
@@ -23,6 +24,8 @@ Route::get('/', [ExploreController::class, 'index'])->name('home');
 Route::get('/explore', [ExploreController::class, 'index'])->name('explore');
 Route::get('/venues/{slug}', [CourtBookingController::class, 'showVenue'])->name('venues.show');
 Route::get('/venue/{slug}', [CourtBookingController::class, 'showVenue'])->name('explore.venue');
+Route::get('/hub', [ContentHubController::class, 'index'])->name('hub');
+Route::get('/hub/{post:slug}', [ContentHubController::class, 'show'])->name('hub.show');
 Route::get('/api/courts/{id}/slots', [CourtBookingController::class, 'getSlotsApi'])->name('api.courts.slots');
 
 // Authentication Routes
