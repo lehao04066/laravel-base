@@ -9,6 +9,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CourtBookingController;
 use App\Http\Controllers\CustomerBookingController;
 use App\Http\Controllers\ExploreController;
+use App\Http\Controllers\MatchmakingController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -33,6 +34,10 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 // Authenticated Client Routes
 Route::middleware(['auth'])->group(function () {
+    Route::get('/matchmaking', [MatchmakingController::class, 'index'])->name('matchmaking');
+    Route::post('/matchmaking', [MatchmakingController::class, 'store'])->name('matchmaking.store');
+    Route::get('/matchmaking/{matchPost}', [MatchmakingController::class, 'show'])->name('matchmaking.show');
+    Route::post('/matchmaking/{matchPost}/join', [MatchmakingController::class, 'join'])->name('matchmaking.join');
     Route::post('/booking/submit', [CourtBookingController::class, 'submitBooking'])->name('booking.submit');
     Route::get('/my-bookings', [CustomerBookingController::class, 'index'])->name('my-bookings');
     Route::get('/my-bookings/list', [CustomerBookingController::class, 'index'])->name('my-bookings.index');
