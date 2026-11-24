@@ -13,6 +13,7 @@ class MatchPost extends Model
         'booking_id',
         'venue_id',
         'title',
+        'match_type',
         'play_datetime',
         'duration_hours',
         'target_level',
