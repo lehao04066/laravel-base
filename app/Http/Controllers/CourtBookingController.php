@@ -77,6 +77,7 @@ class CourtBookingController extends Controller
             'slots.*.start_time' => ['required', 'string'],
             'slots.*.end_time' => ['required', 'string'],
             'notes' => ['nullable', 'string', 'max:500'],
+            'voucher_code' => ['nullable', 'string', 'max:50'],
         ], [
             'slots.required' => 'Vui lòng chọn ít nhất một khung giờ sân để đặt.',
             'booking_date.after_or_equal' => 'Không thể đặt sân cho ngày trong quá khứ.',
@@ -93,11 +94,12 @@ class CourtBookingController extends Controller
                 $venue,
                 $date,
                 $slots,
-                $request->notes
+                $request->notes,
+                $request->voucher_code
             );
 
             return redirect()->route('my-bookings.show', $booking->booking_code)
-                ->with('success', "Đặt sân thành công! Mã đặt sân của bạn là: {$booking->booking_code}. Hình thức: Thanh toán tại sân.");
+                ->with('success', "Đặt sân thành công! Mã đặt sân của bạn là: {$booking->booking_code}. Giảm giá: ".number_format((float) $booking->discount_amount, 0, ',', '.')."đ. Hình thức: Thanh toán tại sân.");
         } catch (Exception $e) {
             return back()->with('error', $e->getMessage())->withInput();
         }

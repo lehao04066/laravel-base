@@ -11,6 +11,7 @@ use App\Http\Controllers\ContentHubController;
 use App\Http\Controllers\CustomerBookingController;
 use App\Http\Controllers\ExploreController;
 use App\Http\Controllers\MatchmakingController;
+use App\Http\Controllers\PromotionController;
 use App\Http\Controllers\WalletController;
 use Illuminate\Support\Facades\Route;
 
@@ -27,6 +28,7 @@ Route::get('/venues/{slug}', [CourtBookingController::class, 'showVenue'])->name
 Route::get('/venue/{slug}', [CourtBookingController::class, 'showVenue'])->name('explore.venue');
 Route::get('/hub', [ContentHubController::class, 'index'])->name('hub');
 Route::get('/hub/{post:slug}', [ContentHubController::class, 'show'])->name('hub.show');
+Route::get('/promotions', [PromotionController::class, 'index'])->name('promotions.index');
 Route::get('/api/courts/{id}/slots', [CourtBookingController::class, 'getSlotsApi'])->name('api.courts.slots');
 
 // Authentication Routes
@@ -38,6 +40,7 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 // Authenticated Client Routes
 Route::middleware(['auth'])->group(function () {
+    Route::post('/promotions/{id}/save', [PromotionController::class, 'saveVoucher'])->name('promotions.save');
     Route::get('/wallet', [WalletController::class, 'show'])->name('wallet.show');
     Route::post('/wallet/topup', [WalletController::class, 'topup'])->name('wallet.topup');
 

@@ -50,6 +50,7 @@
                         @guest
                             <a href="{{ route('hub') }}" class="px-3 py-2 rounded-lg {{ request()->routeIs('hub*') ? 'text-blue-600 bg-blue-50 font-bold' : 'hover:text-blue-600 hover:bg-blue-50/50' }} transition">Cẩm Nang</a>
                         @endguest
+                        <a href="{{ route('promotions.index') }}" class="px-3 py-2 rounded-lg {{ request()->routeIs('promotions.*') ? 'text-blue-600 bg-blue-50 font-bold' : 'hover:text-blue-600 hover:bg-blue-50/50' }} transition">Ưu Đãi & Voucher</a>
                         @auth
                             <a href="{{ route('hub') }}" class="px-3 py-2 rounded-lg {{ request()->routeIs('hub*') ? 'text-blue-600 bg-blue-50 font-bold' : 'hover:text-blue-600 hover:bg-blue-50/50' }} transition">Cẩm Nang</a>
                             <a href="{{ route('matchmaking') }}" class="px-3 py-2 rounded-lg {{ request()->routeIs('matchmaking*') ? 'text-blue-600 bg-blue-50 font-bold' : 'hover:text-blue-600 hover:bg-blue-50/50' }} transition">Ghép Kèo</a>
@@ -137,6 +138,7 @@
                 @guest
                     <a href="{{ route('hub') }}" class="block px-3 py-2 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-50">Cẩm Nang</a>
                 @endguest
+                <a href="{{ route('promotions.index') }}" class="block px-3 py-2 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-50">Ưu Đãi & Voucher</a>
                 @auth
                     <a href="{{ route('hub') }}" class="block px-3 py-2 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-50">Cẩm Nang</a>
                     <a href="{{ route('matchmaking') }}" class="block px-3 py-2 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-50">Ghép Kèo</a>

@@ -278,6 +278,18 @@
                 <label class="block text-xs font-bold text-slate-700 uppercase mb-1.5">Ghi chú thêm cho sân (không bắt buộc):</label>
                 <input type="text" name="notes" placeholder="Ví dụ: Đặt thêm 2 ống cầu Ba Sao, mượn 2 vợt tập..." class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-blue-600 focus:bg-white transition">
             </div>
+
+            <div class="mt-4">
+                <label class="block text-xs font-bold text-slate-700 uppercase mb-1.5">Mã khuyến mãi</label>
+                <div class="flex flex-col sm:flex-row gap-2">
+                    <input type="text" name="voucher_code" value="{{ old('voucher_code') }}" placeholder="Nhập mã voucher, ví dụ GOSPORT20" class="flex-1 px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm uppercase font-bold tracking-wider focus:outline-none focus:border-blue-600 focus:bg-white transition">
+                    <a href="{{ route('promotions.index') }}" target="_blank" class="inline-flex items-center justify-center gap-1.5 px-4 py-3 rounded-xl bg-amber-50 border border-amber-200 text-amber-800 text-xs font-bold hover:bg-amber-100 transition">
+                        <span class="material-symbols-outlined text-base">local_offer</span>
+                        Xem mã đang có
+                    </a>
+                </div>
+                <p class="mt-2 text-[11px] text-slate-500">Mã sẽ được kiểm tra lại trên hệ thống và tự động trừ vào tổng tiền nếu đủ điều kiện.</p>
+            </div>
         </div>
 
         <!-- Sticky Bottom Booking Summary Bar -->

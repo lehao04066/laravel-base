@@ -112,6 +112,43 @@
         </div>
     </section>
 
+    <section class="mt-6 rounded-3xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
+        <div class="mb-5 flex items-center justify-between gap-4">
+            <div>
+                <h2 class="font-headline text-lg font-bold text-slate-900">Mã ưu đãi đã lưu</h2>
+                <p class="mt-1 text-xs text-slate-500">Các voucher bạn đã lưu từ Trung tâm Ưu đãi.</p>
+            </div>
+            <a href="{{ route('promotions.index') }}" class="inline-flex items-center gap-1 text-xs font-bold text-blue-700 hover:underline">
+                Xem thêm
+                <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+            </a>
+        </div>
+
+        <div class="grid grid-cols-1 gap-3 md:grid-cols-2">
+            @forelse ($savedVouchers as $voucher)
+                <div class="flex items-center justify-between gap-3 rounded-2xl border border-slate-200 bg-slate-50 p-4">
+                    <div class="min-w-0">
+                        <div class="flex items-center gap-2">
+                            <span class="font-mono text-sm font-bold text-slate-900">{{ $voucher->code }}</span>
+                            <span class="rounded-full bg-emerald-100 px-2 py-0.5 text-[10px] font-bold text-emerald-700">Đã lưu</span>
+                        </div>
+                        <p class="mt-1 truncate text-xs text-slate-500">{{ $voucher->title }}</p>
+                        <p class="mt-1 text-[11px] text-slate-400">HSD: {{ $voucher->end_date->format('d/m/Y') }}</p>
+                    </div>
+                    <span class="shrink-0 rounded-lg bg-amber-100 px-2.5 py-1 text-xs font-extrabold text-amber-800">
+                        -{{ number_format((float) $voucher->discount_value, 0, ',', '.') }}{{ $voucher->discount_type === 'percent' ? '%' : 'đ' }}
+                    </span>
+                </div>
+            @empty
+                <div class="rounded-2xl border border-dashed border-slate-300 bg-slate-50 px-4 py-8 text-center md:col-span-2">
+                    <span class="material-symbols-outlined text-3xl text-slate-300">local_offer</span>
+                    <p class="mt-2 text-sm font-semibold text-slate-600">Bạn chưa lưu mã ưu đãi nào</p>
+                    <a href="{{ route('promotions.index') }}" class="mt-3 inline-flex rounded-xl bg-blue-600 px-4 py-2 text-xs font-bold text-white hover:bg-blue-700">Khám phá voucher</a>
+                </div>
+            @endforelse
+        </div>
+    </section>
+
     <div x-show="topupModal" x-cloak class="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/70 p-4 backdrop-blur-sm">
         <div class="relative w-full max-w-sm rounded-3xl bg-white p-8 text-center shadow-2xl" @click.outside="topupModal = false">
             <button type="button" @click="topupModal = false" class="absolute right-4 top-4 rounded-lg p-2 text-slate-400 hover:text-slate-700" aria-label="Đóng">
