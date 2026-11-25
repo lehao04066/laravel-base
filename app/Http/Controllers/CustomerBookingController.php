@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Booking;
 use App\Services\BookingService;
+use Endroid\QrCode\QrCode;
+use Endroid\QrCode\Writer\PngWriter;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -27,6 +29,8 @@ class CustomerBookingController extends Controller
 
         if ($tab === 'upcoming') {
             $query->where('status', 'confirmed');
+        } elseif ($tab === 'completed') {
+            $query->whereIn('status', ['checked_in', 'completed']);
         } elseif ($tab === 'cancelled') {
             $query->where('status', 'cancelled');
         }
@@ -35,10 +39,11 @@ class CustomerBookingController extends Controller
 
         // Counts for tabs
         $upcomingCount = Booking::where('user_id', $user->id)->where('status', 'confirmed')->count();
+        $completedCount = Booking::where('user_id', $user->id)->whereIn('status', ['checked_in', 'completed'])->count();
         $cancelledCount = Booking::where('user_id', $user->id)->where('status', 'cancelled')->count();
         $allCount = Booking::where('user_id', $user->id)->count();
 
-        return view('customer.my_bookings', compact('bookings', 'tab', 'upcomingCount', 'cancelledCount', 'allCount'));
+        return view('customer.my_bookings', compact('bookings', 'tab', 'upcomingCount', 'completedCount', 'cancelledCount', 'allCount'));
     }
 
     public function show(string|int $id)
@@ -50,6 +55,25 @@ class CustomerBookingController extends Controller
             ->firstOrFail();
 
         return view('customer.booking_detail', compact('booking'));
+    }
+
+    public function qr(string|int $id)
+    {
+        $booking = Booking::where(is_numeric($id) ? 'id' : 'booking_code', $id)
+            ->where('user_id', Auth::id())
+            ->whereNotNull('check_in_token')
+            ->firstOrFail();
+
+        $result = (new PngWriter())->write(new QrCode(
+            data: $booking->check_in_token,
+            size: 260,
+            margin: 12,
+        ));
+
+        return response($result->getString(), 200, [
+            'Content-Type' => $result->getMimeType(),
+            'Cache-Control' => 'private, no-store',
+        ]);
     }
 
     public function cancel(string|int $id, Request $request)
