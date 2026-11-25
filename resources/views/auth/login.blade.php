@@ -114,7 +114,7 @@
                             <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Email hoặc Số điện thoại</label>
                             <div class="relative">
                                 <span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-lg">mail</span>
-                                <input type="text" name="email" value="{{ old('email', 'client@gosport.vn') }}" required placeholder="client@gosport.vn hoặc 0988889999" class="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-blue-600 focus:bg-white transition">
+                                <input type="text" name="email" value="{{ old('email', 'customer@gosport.vn') }}" required placeholder="customer@gosport.vn hoặc 0988889999" class="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-blue-600 focus:bg-white transition">
                             </div>
                         </div>
 
@@ -146,8 +146,8 @@
                     <div class="mt-6 pt-5 border-t border-slate-100">
                         <p class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Đăng nhập nhanh theo vai trò (Demo):</p>
                         <div class="grid grid-cols-2 gap-2 text-xs">
-                            <button type="button" onclick="fillRole('client@gosport.vn', 'password123')" class="p-2.5 rounded-lg bg-blue-50 hover:bg-blue-100 text-blue-700 font-semibold text-left transition truncate">
-                                🏸 Khách Hàng (Client)
+                            <button type="button" onclick="fillRole('customer@gosport.vn', 'password123')" class="p-2.5 rounded-lg bg-blue-50 hover:bg-blue-100 text-blue-700 font-semibold text-left transition truncate">
+                                🏸 Khách Hàng (Customer)
                             </button>
                             <button type="button" onclick="fillRole('admin@gosport.vn', 'password123')" class="p-2.5 rounded-lg bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-semibold text-left transition truncate">
                                 ⚙️ Quản Trị Viên (Admin)

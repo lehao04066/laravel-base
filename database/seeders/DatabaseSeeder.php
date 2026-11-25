@@ -34,9 +34,9 @@ class DatabaseSeeder extends Seeder
 
         // 2. Client User
         $client = User::firstOrCreate(
-            ['email' => 'client@gosport.vn'],
+            ['email' => 'customer@gosport.vn'],
             [
-                'name' => 'Nguyễn Văn Tuấn (Client)',
+                'name' => 'Nguyễn Văn Tuấn (Customer)',
                 'phone' => '0988889999',
                 'password' => $password,
                 'role' => 'client',

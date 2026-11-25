@@ -77,4 +77,19 @@ class User extends Authenticatable
             ->withPivot('saved_at')
             ->withTimestamps();
     }
+
+    public function memberships(): HasMany
+    {
+        return $this->hasMany(UserMembership::class);
+    }
+
+    public function recurringContracts(): HasMany
+    {
+        return $this->hasMany(RecurringContract::class);
+    }
+
+    public function loyaltyTransactions(): HasMany
+    {
+        return $this->hasMany(LoyaltyTransaction::class);
+    }
 }
