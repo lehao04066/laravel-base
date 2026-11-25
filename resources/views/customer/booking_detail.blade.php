@@ -98,6 +98,16 @@
                 <strong class="text-slate-900">Tổng thanh toán:</strong>
                 <strong class="text-blue-600 font-headline text-lg">{{ number_format($booking->final_amount, 0, ',', '.') }} đ</strong>
             </div>
+            @if((float) $booking->discount_amount > 0)
+                <div class="flex justify-between text-sm text-emerald-600">
+                    <span>Giảm giá voucher:</span>
+                    <strong>-{{ number_format((float) $booking->discount_amount, 0, ',', '.') }} đ</strong>
+                </div>
+                <div class="flex justify-between text-xs text-slate-500">
+                    <span>Giá trước giảm:</span>
+                    <span>{{ number_format((float) $booking->total_amount, 0, ',', '.') }} đ</span>
+                </div>
+            @endif
         </div>
 
         @if($booking->notes)

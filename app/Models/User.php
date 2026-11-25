@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -68,5 +69,12 @@ class User extends Authenticatable
     public function wallet(): HasOne
     {
         return $this->hasOne(WalletAccount::class);
+    }
+
+    public function savedVouchers(): BelongsToMany
+    {
+        return $this->belongsToMany(Voucher::class, 'user_vouchers')
+            ->withPivot('saved_at')
+            ->withTimestamps();
     }
 }

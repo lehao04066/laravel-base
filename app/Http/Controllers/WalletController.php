@@ -31,8 +31,16 @@ class WalletController extends Controller
         $ledgerEntries = Schema::hasTable('wallet_ledger_entries')
             ? $wallet->ledgerEntries()->latest()->take(8)->get()
             : collect();
+        $savedVouchers = Schema::hasTable('user_vouchers')
+            ? $user->savedVouchers()
+                ->where('vouchers.is_active', true)
+                ->whereDate('vouchers.start_date', '<=', now())
+                ->whereDate('vouchers.end_date', '>=', now())
+                ->orderBy('vouchers.end_date')
+                ->get()
+            : collect();
 
-        return view('customer.profile', compact('user', 'profile', 'wallet', 'ledgerEntries'));
+        return view('customer.profile', compact('user', 'profile', 'wallet', 'ledgerEntries', 'savedVouchers'));
     }
 
     public function topup(Request $request): RedirectResponse

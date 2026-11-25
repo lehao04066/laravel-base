@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\Booking;
 use App\Models\Court;
 use App\Models\User;
+use App\Models\VoucherRedemption;
 use App\Models\Venue;
 use Carbon\Carbon;
 use Exception;
@@ -15,13 +16,16 @@ class BookingService
 {
     protected CourtAvailabilityService $availabilityService;
     protected PricingService $pricingService;
+    protected VoucherService $voucherService;
 
     public function __construct(
         CourtAvailabilityService $availabilityService,
-        PricingService $pricingService
+        PricingService $pricingService,
+        VoucherService $voucherService
     ) {
         $this->availabilityService = $availabilityService;
         $this->pricingService = $pricingService;
+        $this->voucherService = $voucherService;
     }
 
     /**
@@ -32,7 +36,8 @@ class BookingService
         Venue $venue,
         string $date,
         array $slots, // [['court_id' => 1, 'start_time' => '18:00:00', 'end_time' => '19:00:00'], ...]
-        ?string $notes = null
+        ?string $notes = null,
+        ?string $voucherCode = null
     ): Booking {
         if (empty($slots)) {
             throw new Exception("Vui lòng chọn ít nhất một khung giờ đặt sân.");
@@ -46,7 +51,7 @@ class BookingService
             return $a['court_id'] <=> $b['court_id'];
         });
 
-        return DB::transaction(function () use ($user, $venue, $date, $slots, $notes) {
+        return DB::transaction(function () use ($user, $venue, $date, $slots, $notes, $voucherCode) {
             $totalAmount = 0.00;
             $itemsData = [];
 
@@ -77,7 +82,20 @@ class BookingService
                 ];
             }
 
-            // 4. Generate unique booking code & check-in token
+            // 4. Validate voucher on the server after calculating the real order total
+            $discountAmount = 0.00;
+            $voucher = null;
+            if ($voucherCode) {
+                $voucherResult = $this->voucherService->applyVoucher($voucherCode, $totalAmount, $user->id);
+                if (! $voucherResult['valid']) {
+                    throw new Exception($voucherResult['message']);
+                }
+
+                $discountAmount = $voucherResult['discount'];
+                $voucher = $voucherResult['voucher'];
+            }
+
+            // 5. Generate unique booking code & check-in token
             $bookingCode = 'GS-' . date('Ymd') . '-' . strtoupper(Str::random(6));
             $checkInToken = 'GSCK-' . Str::uuid()->toString();
 
@@ -88,8 +106,8 @@ class BookingService
                 'venue_id' => $venue->id,
                 'booking_date' => $date,
                 'total_amount' => $totalAmount,
-                'discount_amount' => 0.00,
-                'final_amount' => $totalAmount,
+                'discount_amount' => $discountAmount,
+                'final_amount' => max(0.00, $totalAmount - $discountAmount),
                 'status' => 'confirmed',
                 'payment_status' => 'unpaid',
                 'payment_method' => 'pay_at_venue',
@@ -97,17 +115,32 @@ class BookingService
                 'notes' => $notes,
             ]);
 
-            // 6. Create booking items
+            // 6. Record voucher use only after the booking is created successfully
+            if ($voucher && $discountAmount > 0) {
+                VoucherRedemption::create([
+                    'voucher_id' => $voucher->id,
+                    'user_id' => $user->id,
+                    'booking_id' => $booking->id,
+                    'discount_applied' => $discountAmount,
+                    'redeemed_at' => now(),
+                ]);
+
+                $voucher->increment('used_count');
+            }
+
+            // 7. Create booking items
             foreach ($itemsData as $item) {
                 $booking->items()->create($item);
             }
 
-            // 7. Record initial status history
+            // 8. Record initial status history
             $booking->statusHistories()->create([
                 'old_status' => null,
                 'new_status' => 'confirmed',
                 'changed_by_user_id' => $user->id,
-                'reason' => 'Đặt sân thành công - Thanh toán tại sân',
+                'reason' => $voucher
+                    ? 'Đặt sân thành công - áp dụng mã '.$voucher->code.' và thanh toán tại sân'
+                    : 'Đặt sân thành công - Thanh toán tại sân',
             ]);
 
             return $booking;
