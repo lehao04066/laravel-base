@@ -45,6 +45,8 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/promotions/{id}/save', [PromotionController::class, 'saveVoucher'])->name('promotions.save');
     Route::get('/wallet', [WalletController::class, 'show'])->name('wallet.show');
     Route::post('/wallet/topup', [WalletController::class, 'topup'])->name('wallet.topup');
+    Route::put('/profile', [WalletController::class, 'updateProfile'])->name('profile.update');
+    Route::put('/profile/password', [WalletController::class, 'updatePassword'])->name('profile.password.update');
 
     Route::get('/matchmaking', [MatchmakingController::class, 'index'])->name('matchmaking');
     Route::post('/matchmaking', [MatchmakingController::class, 'store'])->name('matchmaking.store');

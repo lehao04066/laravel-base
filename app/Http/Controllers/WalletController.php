@@ -8,6 +8,7 @@ use App\Models\WalletLedgerEntry;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
@@ -89,4 +90,46 @@ class WalletController extends Controller
 
         return back()->with('success', 'Đã cộng số dư ví thử nghiệm, gồm 15% thưởng.');
     }
+
+    public function updateProfile(Request $request): RedirectResponse
+    {
+        $data = $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'phone' => ['required', 'string', 'regex:/^[0-9]{10,11}$/'],
+            'skill_level' => ['required', 'string', 'max:50'],
+            'play_style' => ['nullable', 'string', 'max:100'],
+            'preferred_hand' => ['required', 'in:right,left'],
+            'racket_brand' => ['nullable', 'string', 'max:100'],
+            'bio' => ['nullable', 'string', 'max:1000'],
+        ]);
+
+        $user = $request->user();
+        $user->update(['name' => $data['name'], 'phone' => $data['phone']]);
+        $user->profile()->updateOrCreate([], [
+            'skill_level' => $data['skill_level'],
+            'play_style' => $data['play_style'],
+            'preferred_hand' => $data['preferred_hand'],
+            'racket_brand' => $data['racket_brand'],
+            'bio' => $data['bio'],
+        ]);
+
+        return back()->with('success', 'Đã cập nhật hồ sơ cá nhân.');
+    }
+
+    public function updatePassword(Request $request): RedirectResponse
+    {
+        $data = $request->validate([
+            'current_password' => ['required', 'current_password'],
+            'password' => ['required', 'string', 'min:6', 'confirmed'],
+        ], [
+            'current_password.current_password' => 'Mật khẩu hiện tại không đúng.',
+            'password.confirmed' => 'Mật khẩu xác nhận không khớp.',
+            'password.min' => 'Mật khẩu mới phải có ít nhất 6 ký tự.',
+        ]);
+
+        $request->user()->update(['password' => Hash::make($data['password'])]);
+
+        return back()->with('success', 'Đã đổi mật khẩu thành công.');
+    }
+
 }
