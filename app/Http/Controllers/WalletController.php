@@ -74,7 +74,7 @@ class WalletController extends Controller
                 'type' => 'deposit',
                 'amount' => $amount + $bonus,
                 'balance_after' => $balanceAfter,
-                'description' => 'Nạp thử '.number_format($amount, 0, ',', '.').'đ, tặng 15%',
+                'description' => 'Nạp tiền '.number_format($amount, 0, ',', '.').'đ, tặng 15%',
                 'reference_id' => 'DEMO-'.Str::uuid(),
             ]);
         });
