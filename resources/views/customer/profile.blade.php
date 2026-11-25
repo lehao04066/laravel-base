@@ -40,7 +40,7 @@
                 <p class="mt-1 text-xs text-blue-100">{{ $wallet->currency }} · {{ $wallet->status === 'active' ? 'Đang hoạt động' : 'Tạm khóa' }}</p>
                 <button type="button" @click="topupModal = true" class="mt-5 inline-flex items-center gap-2 rounded-xl bg-amber-400 px-5 py-2.5 text-xs font-extrabold text-slate-950 shadow-md transition hover:bg-amber-300">
                     <span class="material-symbols-outlined text-base">add</span>
-                    Nạp thử (+15%)
+                    Nạp tiền (+15%)
                 </button>
             </div>
         </div>
@@ -74,7 +74,7 @@
             </dl>
 
             <div class="mt-6 rounded-2xl border border-amber-200 bg-amber-50 p-4 text-xs leading-relaxed text-amber-900">
-                Nạp thử nghiệm sẽ cộng số dư trực tiếp vào ví và ghi lại lịch sử giao dịch. Chưa kết nối cổng thanh toán thật.
+                Nạp tiền sẽ cộng số dư trực tiếp vào ví và ghi lại lịch sử giao dịch. Chưa kết nối cổng thanh toán thật.
             </div>
         </div>
 
@@ -120,10 +120,10 @@
             <div class="mx-auto mb-3 grid h-12 w-12 place-items-center rounded-2xl bg-amber-50 text-amber-600">
                 <span class="material-symbols-outlined text-2xl">account_balance_wallet</span>
             </div>
-            <h2 class="font-headline text-xl font-bold text-slate-900">Nạp thử vào ví</h2>
+            <h2 class="font-headline text-xl font-bold text-slate-900">Nạp tiền vào ví</h2>
             <p class="mt-2 text-xs leading-relaxed text-slate-500">Chọn mức nạp. Ví demo sẽ được cộng thêm 15% thưởng ngay lập tức.</p>
 
-            <form method="POST" action="{{ route('profile.topup') }}" class="my-5 space-y-3 text-left">
+            <form method="POST" action="{{ route('wallet.topup') }}" class="my-5 space-y-3 text-left">
                 @csrf
                 <label for="amount" class="block text-xs font-bold text-slate-700">Mức nạp</label>
                 <select id="amount" name="amount" required class="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-bold text-slate-800">
@@ -133,7 +133,7 @@
                     <option value="2000000">2.000.000đ (+300.000đ thưởng)</option>
                 </select>
                 <button type="submit" class="w-full rounded-xl bg-amber-400 py-3 text-xs font-extrabold text-slate-950 shadow-md transition hover:bg-amber-300">
-                    Xác nhận nạp thử
+                    Xác nhận nạp tiền
                 </button>
             </form>
             <p class="text-[11px] leading-relaxed text-slate-400">Đây là thao tác mô phỏng, chưa phát sinh thanh toán thật.</p>

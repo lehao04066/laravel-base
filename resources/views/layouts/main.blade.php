@@ -46,10 +46,10 @@
 
                     <!-- Desktop Navigation Links -->
                     <nav class="hidden md:flex items-center gap-1 text-sm font-semibold text-slate-600">
+                        <a href="{{ route('home') }}" class="px-3 py-2 rounded-lg {{ request()->routeIs('home', 'explore', 'venues.*') ? 'text-blue-600 bg-blue-50 font-bold' : 'hover:text-blue-600 hover:bg-blue-50/50' }} transition">Khám Phá Sân</a>
                         @guest
                             <a href="{{ route('hub') }}" class="px-3 py-2 rounded-lg {{ request()->routeIs('hub*') ? 'text-blue-600 bg-blue-50 font-bold' : 'hover:text-blue-600 hover:bg-blue-50/50' }} transition">Cẩm Nang</a>
                         @endguest
-                        <a href="{{ route('home') }}" class="px-3 py-2 rounded-lg {{ request()->routeIs('home', 'explore', 'venues.*') ? 'text-blue-600 bg-blue-50 font-bold' : 'hover:text-blue-600 hover:bg-blue-50/50' }} transition">Khám Phá Sân</a>
                         @auth
                             <a href="{{ route('hub') }}" class="px-3 py-2 rounded-lg {{ request()->routeIs('hub*') ? 'text-blue-600 bg-blue-50 font-bold' : 'hover:text-blue-600 hover:bg-blue-50/50' }} transition">Cẩm Nang</a>
                             <a href="{{ route('matchmaking') }}" class="px-3 py-2 rounded-lg {{ request()->routeIs('matchmaking*') ? 'text-blue-600 bg-blue-50 font-bold' : 'hover:text-blue-600 hover:bg-blue-50/50' }} transition">Ghép Kèo</a>
@@ -92,6 +92,10 @@
                                         <span class="material-symbols-outlined text-slate-400 text-lg">confirmation_number</span>
                                         <span>Đơn đặt của tôi</span>
                                     </a>
+                                    <a href="{{ route('wallet.show') }}" class="flex items-center gap-3 px-4 py-2 hover:bg-amber-50 transition {{ request()->routeIs('wallet.*') ? 'bg-amber-50 text-amber-700' : '' }}">
+                                        <span class="material-symbols-outlined text-amber-500 text-lg">account_balance_wallet</span>
+                                        <span>Ví GoSport Pay</span>
+                                    </a>
                                     @if(Auth::user()->isAdmin())
                                         <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-3 px-4 py-2 text-indigo-600 hover:bg-indigo-50 font-semibold transition">
                                             <span class="material-symbols-outlined text-lg">admin_panel_settings</span>
@@ -129,14 +133,18 @@
 
             <!-- Mobile Navigation Drawer -->
             <div x-show="mobileMenuOpen" x-transition class="md:hidden py-4 border-t border-slate-200 space-y-2">
+                <a href="{{ route('home') }}" class="block px-3 py-2 rounded-xl text-sm font-bold text-blue-600 bg-blue-50">Khám Phá Sân</a>
                 @guest
                     <a href="{{ route('hub') }}" class="block px-3 py-2 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-50">Cẩm Nang</a>
                 @endguest
-                <a href="{{ route('home') }}" class="block px-3 py-2 rounded-xl text-sm font-bold text-blue-600 bg-blue-50">Khám Phá Sân</a>
                 @auth
                     <a href="{{ route('hub') }}" class="block px-3 py-2 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-50">Cẩm Nang</a>
                     <a href="{{ route('matchmaking') }}" class="block px-3 py-2 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-50">Ghép Kèo</a>
                     <a href="{{ route('my-bookings') }}" class="block px-3 py-2 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-50">Đơn Đặt Của Tôi</a>
+                    <a href="{{ route('wallet.show') }}" class="flex items-center gap-2 px-3 py-2 rounded-xl text-sm font-medium text-amber-700 hover:bg-amber-50">
+                        <span class="material-symbols-outlined text-lg">account_balance_wallet</span>
+                        <span>Ví GoSport Pay</span>
+                    </a>
                     @if(Auth::user()->isAdmin())
                         <div class="pt-2 border-t border-slate-100">
                             <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-2 px-3 py-2.5 rounded-xl text-sm font-bold text-white bg-indigo-600 hover:bg-indigo-700">

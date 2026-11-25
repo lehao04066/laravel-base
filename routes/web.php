@@ -11,6 +11,7 @@ use App\Http\Controllers\ContentHubController;
 use App\Http\Controllers\CustomerBookingController;
 use App\Http\Controllers\ExploreController;
 use App\Http\Controllers\MatchmakingController;
+use App\Http\Controllers\WalletController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -37,6 +38,9 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 // Authenticated Client Routes
 Route::middleware(['auth'])->group(function () {
+    Route::get('/wallet', [WalletController::class, 'show'])->name('wallet.show');
+    Route::post('/wallet/topup', [WalletController::class, 'topup'])->name('wallet.topup');
+
     Route::get('/matchmaking', [MatchmakingController::class, 'index'])->name('matchmaking');
     Route::post('/matchmaking', [MatchmakingController::class, 'store'])->name('matchmaking.store');
     Route::get('/matchmaking/{matchPost}', [MatchmakingController::class, 'show'])->name('matchmaking.show');
