@@ -3,6 +3,7 @@
 use App\Http\Controllers\AdminBookingController;
 use App\Http\Controllers\AdminCourtController;
 use App\Http\Controllers\AdminDashboardController;
+use App\Http\Controllers\AdminCrmController;
 use App\Http\Controllers\AdminPricingController;
 use App\Http\Controllers\AdminVenueController;
 use App\Http\Controllers\AuthController;
@@ -85,4 +86,9 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/bookings', [AdminBookingController::class, 'index'])->name('bookings.index');
     Route::get('/bookings/{id}', [AdminBookingController::class, 'show'])->name('bookings.show');
     Route::post('/bookings/{id}/cancel', [AdminBookingController::class, 'cancel'])->name('bookings.cancel');
+
+    Route::get('/crm', [AdminCrmController::class, 'index'])->name('crm.index');
+    Route::post('/crm/membership', [AdminCrmController::class, 'assignMembership'])->name('crm.membership');
+    Route::post('/crm/contracts', [AdminCrmController::class, 'storeContract'])->name('crm.contracts.store');
+    Route::post('/crm/contracts/{contract}/toggle', [AdminCrmController::class, 'toggleContract'])->name('crm.contracts.toggle');
 });
