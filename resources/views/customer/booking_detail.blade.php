@@ -25,6 +25,10 @@
                     <span class="px-3.5 py-1.5 rounded-full text-xs font-bold bg-rose-100 text-rose-800">
                         ĐÃ HỦY
                     </span>
+                @elseif($booking->status === 'checked_in')
+                    <span class="px-3.5 py-1.5 rounded-full text-xs font-bold bg-violet-100 text-violet-800">ĐÃ CHECK-IN</span>
+                @elseif($booking->status === 'completed')
+                    <span class="px-3.5 py-1.5 rounded-full text-xs font-bold bg-slate-200 text-slate-700">ĐÃ HOÀN THÀNH</span>
                 @else
                     <span class="px-3.5 py-1.5 rounded-full text-xs font-bold bg-slate-100 text-slate-700">
                         {{ strtoupper($booking->status) }}
@@ -78,9 +82,20 @@
             </div>
             <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 text-xs font-medium text-slate-200">
                 <span class="material-symbols-outlined text-sm text-emerald-400">check_circle</span>
-                <span>Trạng thái: {{ $booking->status === 'confirmed' ? 'Đã xác nhận giữ chỗ' : ($booking->status === 'cancelled' ? 'Đơn đã hủy' : $booking->status) }}</span>
+                <span>Trạng thái: {{ $booking->status === 'confirmed' ? 'Đã xác nhận giữ chỗ' : ($booking->status === 'cancelled' ? 'Đơn đã hủy' : ($booking->status === 'checked_in' ? 'Đã check-in' : ($booking->status === 'completed' ? 'Đã hoàn thành' : $booking->status))) }}</span>
             </div>
         </div>
+
+        @if($booking->check_in_token && $booking->status !== 'cancelled')
+            <div class="p-6 rounded-2xl bg-violet-50 border border-violet-100 text-center">
+                <h3 class="font-bold text-violet-900 text-sm">Mã QR check-in</h3>
+                <p class="text-xs text-violet-700 mt-1 mb-4">Xuất trình mã này tại quầy để nhận sân nhanh hơn.</p>
+                <div class="mx-auto w-fit rounded-2xl border border-violet-100 bg-white p-3 shadow-sm">
+                    <img src="{{ route('my-bookings.qr', $booking->booking_code) }}" alt="Mã QR check-in" class="w-52 h-52">
+                </div>
+                <p class="mt-3 text-xs text-violet-700">Mã được tạo riêng trong hệ thống GoSport.</p>
+            </div>
+        @endif
 
         <!-- Financial Summary -->
         <div class="p-6 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-2 text-xs">

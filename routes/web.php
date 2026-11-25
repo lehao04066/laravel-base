@@ -52,6 +52,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/my-bookings', [CustomerBookingController::class, 'index'])->name('my-bookings');
     Route::get('/my-bookings/list', [CustomerBookingController::class, 'index'])->name('my-bookings.index');
     Route::get('/my-bookings/{id}', [CustomerBookingController::class, 'show'])->name('my-bookings.show');
+    Route::get('/my-bookings/{id}/qr', [CustomerBookingController::class, 'qr'])->name('my-bookings.qr');
     Route::post('/my-bookings/{id}/cancel', [CustomerBookingController::class, 'cancel'])->name('my-bookings.cancel');
 });
 
