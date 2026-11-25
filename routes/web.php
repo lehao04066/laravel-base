@@ -4,6 +4,7 @@ use App\Http\Controllers\AdminBookingController;
 use App\Http\Controllers\AdminCourtController;
 use App\Http\Controllers\AdminDashboardController;
 use App\Http\Controllers\AdminCrmController;
+use App\Http\Controllers\AdminReviewController;
 use App\Http\Controllers\AdminPricingController;
 use App\Http\Controllers\AdminVenueController;
 use App\Http\Controllers\AuthController;
@@ -55,6 +56,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/my-bookings/{id}', [CustomerBookingController::class, 'show'])->name('my-bookings.show');
     Route::get('/my-bookings/{id}/qr', [CustomerBookingController::class, 'qr'])->name('my-bookings.qr');
     Route::post('/my-bookings/{id}/cancel', [CustomerBookingController::class, 'cancel'])->name('my-bookings.cancel');
+    Route::post('/my-bookings/{id}/review', [CustomerBookingController::class, 'submitReview'])->name('my-bookings.review');
 });
 
 // Admin Operations & Management Portal Routes (Strict Server-Side Authorization)
@@ -91,4 +93,8 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::post('/crm/membership', [AdminCrmController::class, 'assignMembership'])->name('crm.membership');
     Route::post('/crm/contracts', [AdminCrmController::class, 'storeContract'])->name('crm.contracts.store');
     Route::post('/crm/contracts/{contract}/toggle', [AdminCrmController::class, 'toggleContract'])->name('crm.contracts.toggle');
+
+    Route::get('/reviews', [AdminReviewController::class, 'index'])->name('reviews.index');
+    Route::post('/reviews/{review}/approve', [AdminReviewController::class, 'approve'])->name('reviews.approve');
+    Route::post('/reviews/{review}/reply', [AdminReviewController::class, 'reply'])->name('reviews.reply');
 });

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Booking;
+use App\Models\Review;
 use App\Services\BookingService;
 use Endroid\QrCode\QrCode;
 use Endroid\QrCode\Writer\PngWriter;
@@ -49,12 +50,39 @@ class CustomerBookingController extends Controller
     public function show(string|int $id)
     {
         // Enforce that client can ONLY see their own booking
-        $booking = Booking::with(['items.court', 'venue', 'statusHistories.user'])
+        $booking = Booking::with(['items.court', 'venue', 'statusHistories.user', 'review.reply'])
             ->where(is_numeric($id) ? 'id' : 'booking_code', $id)
             ->where('user_id', Auth::id())
             ->firstOrFail();
 
         return view('customer.booking_detail', compact('booking'));
+    }
+
+    public function submitReview(Request $request, string|int $id)
+    {
+        $booking = Booking::with('venue')
+            ->where(is_numeric($id) ? 'id' : 'booking_code', $id)
+            ->where('user_id', Auth::id())
+            ->firstOrFail();
+
+        if (! in_array($booking->status, ['checked_in', 'completed'], true)) {
+            return back()->with('error', 'Bạn chỉ có thể đánh giá sau khi đã chơi xong.');
+        }
+
+        $data = $request->validate([
+            'rating' => ['required', 'integer', 'between:1,5'],
+            'comment' => ['required', 'string', 'min:5', 'max:1000'],
+        ], [
+            'rating.required' => 'Vui lòng chọn số sao.',
+            'comment.required' => 'Vui lòng nhập nội dung đánh giá.',
+        ]);
+
+        Review::updateOrCreate(
+            ['booking_id' => $booking->id, 'user_id' => Auth::id()],
+            ['venue_id' => $booking->venue_id, 'rating' => $data['rating'], 'comment' => $data['comment'], 'is_approved' => false]
+        );
+
+        return back()->with('success', 'Đã gửi đánh giá. Đánh giá sẽ hiển thị sau khi được duyệt.');
     }
 
     public function qr(string|int $id)
