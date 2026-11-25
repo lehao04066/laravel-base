@@ -148,7 +148,6 @@
             @endif
         </div>
     @endif
-</div>
 
 <div x-cloak x-show="showQr" x-transition class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/60" @click.self="closeQrModal()">
     <div class="w-full max-w-sm rounded-3xl bg-white p-7 text-center shadow-2xl">
@@ -175,4 +174,5 @@
         };
     }
 </script>
+</div>
 @endsection
