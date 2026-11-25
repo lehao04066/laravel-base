@@ -94,6 +94,10 @@
                 <span class="material-symbols-outlined text-lg">loyalty</span>
                 <span>CRM &amp; Hội Viên</span>
             </a>
+            <a href="{{ route('admin.reviews.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold transition {{ request()->routeIs('admin.reviews.*') ? 'bg-blue-600 text-white shadow-md shadow-blue-500/25' : 'hover:bg-slate-800 hover:text-white text-slate-400' }}">
+                <span class="material-symbols-outlined text-lg">rate_review</span>
+                <span>Đánh Giá &amp; CSKH</span>
+            </a>
 
             <div class="pt-6 px-3 pb-2 text-[10px] font-bold tracking-wider text-slate-500 uppercase">Khác</div>
 

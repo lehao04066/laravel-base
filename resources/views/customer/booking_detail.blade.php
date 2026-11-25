@@ -131,6 +131,22 @@
             </div>
         @endif
 
+        @if(in_array($booking->status, ['checked_in', 'completed']))
+            <div class="rounded-2xl border border-amber-200 bg-amber-50 p-6">
+                <h3 class="font-bold text-amber-900">Đánh giá trải nghiệm sân</h3>
+                @if($booking->review)
+                    <p class="mt-2 text-sm text-amber-800">Bạn đã đánh giá {{ $booking->review->rating }}/5 sao. Đánh giá đang {{ $booking->review->is_approved ? 'được hiển thị' : 'chờ duyệt' }}.</p>
+                @else
+                    <form method="POST" action="{{ route('my-bookings.review', $booking->booking_code) }}" class="mt-4 space-y-3">
+                        @csrf
+                        <div><label class="mb-1 block text-xs font-bold text-amber-900">Chọn số sao</label><div class="flex items-center gap-1" role="radiogroup" aria-label="Đánh giá số sao">@for($star = 5; $star >= 1; $star--)<input type="radio" id="rating-{{ $star }}" name="rating" value="{{ $star }}" class="rating-choice sr-only" {{ $star === 5 ? 'required' : '' }}><label for="rating-{{ $star }}" class="rating-star cursor-pointer text-3xl text-slate-300 transition hover:text-amber-400" title="{{ $star }} sao">★</label>@endfor</div><p class="mt-1 text-[11px] text-amber-700">Bấm vào số sao bạn muốn đánh giá</p></div>
+                        <textarea name="comment" required minlength="5" maxlength="1000" rows="3" placeholder="Chia sẻ trải nghiệm của bạn..." class="w-full rounded-xl border-amber-200 bg-white text-sm"></textarea>
+                        <button class="rounded-xl bg-amber-500 px-5 py-2.5 text-xs font-bold text-white hover:bg-amber-600">Gửi đánh giá</button>
+                    </form>
+                @endif
+            </div>
+        @endif
+
         <!-- Status History -->
         @if($booking->statusHistories->isNotEmpty())
             <div class="pt-4 border-t border-slate-100">
@@ -175,3 +191,9 @@
     </div>
 </div>
 @endsection
+
+@push('styles')
+<style>
+    .rating-choice:checked + .rating-star { color: #f59e0b; }
+</style>
+@endpush
