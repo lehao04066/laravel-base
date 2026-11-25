@@ -54,6 +54,7 @@
                         @auth
                             <a href="{{ route('hub') }}" class="px-3 py-2 rounded-lg {{ request()->routeIs('hub*') ? 'text-blue-600 bg-blue-50 font-bold' : 'hover:text-blue-600 hover:bg-blue-50/50' }} transition">Cẩm Nang</a>
                             <a href="{{ route('matchmaking') }}" class="px-3 py-2 rounded-lg {{ request()->routeIs('matchmaking*') ? 'text-blue-600 bg-blue-50 font-bold' : 'hover:text-blue-600 hover:bg-blue-50/50' }} transition">Ghép Kèo</a>
+                            <a href="{{ route('match-history.index') }}" class="px-3 py-2 rounded-lg {{ request()->routeIs('match-history.*') ? 'text-blue-600 bg-blue-50 font-bold' : 'hover:text-blue-600 hover:bg-blue-50/50' }} transition">Lịch Sử Trận Đấu</a>
                             <a href="{{ route('my-bookings') }}" class="px-3 py-2 rounded-lg {{ request()->routeIs('my-bookings*') ? 'text-blue-600 bg-blue-50 font-bold' : 'hover:text-blue-600 hover:bg-blue-50/50' }} transition">Đơn Đặt Của Tôi</a>
                         @endauth
                     </nav>
@@ -214,6 +215,7 @@
                     @auth
                         <li><a href="{{ route('hub') }}" class="hover:text-white transition">Cẩm Nang</a></li>
                         <li><a href="{{ route('matchmaking') }}" class="hover:text-white transition">Ghép Kèo</a></li>
+                        <li><a href="{{ route('match-history.index') }}" class="hover:text-white transition">Lịch Sử Trận Đấu</a></li>
                         <li><a href="{{ route('my-bookings') }}" class="hover:text-white transition">Lịch Đặt Của Tôi</a></li>
                         @if(Auth::user()->isAdmin())
                             <li><a href="{{ route('admin.dashboard') }}" class="hover:text-white transition text-indigo-400">Trang Quản Trị Admin</a></li>

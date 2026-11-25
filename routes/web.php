@@ -13,6 +13,7 @@ use App\Http\Controllers\ContentHubController;
 use App\Http\Controllers\CustomerBookingController;
 use App\Http\Controllers\ExploreController;
 use App\Http\Controllers\MatchmakingController;
+use App\Http\Controllers\MatchHistoryController;
 use App\Http\Controllers\PromotionController;
 use App\Http\Controllers\WalletController;
 use Illuminate\Support\Facades\Route;
@@ -52,6 +53,8 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/matchmaking', [MatchmakingController::class, 'store'])->name('matchmaking.store');
     Route::get('/matchmaking/{matchPost}', [MatchmakingController::class, 'show'])->name('matchmaking.show');
     Route::post('/matchmaking/{matchPost}/join', [MatchmakingController::class, 'join'])->name('matchmaking.join');
+    Route::get('/match-history', [MatchHistoryController::class, 'index'])->name('match-history.index');
+    Route::post('/match-history', [MatchHistoryController::class, 'store'])->name('match-history.store');
     Route::post('/booking/submit', [CourtBookingController::class, 'submitBooking'])->name('booking.submit');
     Route::get('/my-bookings', [CustomerBookingController::class, 'index'])->name('my-bookings');
     Route::get('/my-bookings/list', [CustomerBookingController::class, 'index'])->name('my-bookings.index');
