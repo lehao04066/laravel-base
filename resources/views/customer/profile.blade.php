@@ -46,6 +46,39 @@
         </div>
     </section>
 
+    <section class="mb-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div class="rounded-2xl border border-blue-100 bg-blue-50 p-5"><p class="text-xs font-bold uppercase tracking-wider text-blue-600">Lượt đã chơi</p><p class="mt-2 font-headline text-3xl font-black text-slate-900">{{ $profile->matches_played ?? 0 }}</p></div>
+        <div class="rounded-2xl border border-emerald-100 bg-emerald-50 p-5"><p class="text-xs font-bold uppercase tracking-wider text-emerald-600">Tỷ lệ thắng</p><p class="mt-2 font-headline text-3xl font-black text-slate-900">{{ number_format((float) ($profile->win_rate ?? 0), 1) }}%</p></div>
+        <div class="rounded-2xl border border-amber-100 bg-amber-50 p-5"><p class="text-xs font-bold uppercase tracking-wider text-amber-600">Tốc độ smash cao nhất</p><p class="mt-2 font-headline text-3xl font-black text-slate-900">{{ $profile->smash_speed_max ?? 0 }} <span class="text-sm">km/h</span></p></div>
+        <div class="rounded-2xl border border-violet-100 bg-violet-50 p-5"><p class="text-xs font-bold uppercase tracking-wider text-violet-600">Tay thuận</p><p class="mt-2 font-headline text-xl font-black text-slate-900">{{ ($profile->preferred_hand ?? 'right') === 'left' ? 'Tay trái' : 'Tay phải' }}</p></div>
+    </section>
+
+    <section class="mb-8 rounded-3xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
+        <div class="mb-5"><h2 class="font-headline text-lg font-bold text-slate-900">Hồ sơ cá nhân VIP</h2><p class="mt-1 text-xs text-slate-500">Cập nhật thông tin để GoSport phục vụ bạn tốt hơn.</p></div>
+        <form method="POST" action="{{ route('profile.update') }}" class="grid grid-cols-1 gap-4 md:grid-cols-2">
+            @csrf @method('PUT')
+            <div><label class="mb-1.5 block text-xs font-bold text-slate-700">Họ và tên</label><input name="name" value="{{ old('name', $user->name) }}" required class="h-12 w-full rounded-xl border border-slate-300 bg-white px-4 text-sm shadow-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100"></div>
+            <div><label class="mb-1.5 block text-xs font-bold text-slate-700">Số điện thoại</label><input name="phone" value="{{ old('phone', $user->phone) }}" required class="h-12 w-full rounded-xl border border-slate-300 bg-white px-4 text-sm shadow-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100"></div>
+            <div><label class="mb-1.5 block text-xs font-bold text-slate-700">Trình độ</label><select name="skill_level" class="h-12 w-full rounded-xl border border-slate-300 bg-white px-4 text-sm shadow-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100"><option value="beginner" @selected($profile->skill_level === 'beginner')>Mới chơi</option><option value="intermediate" @selected(in_array($profile->skill_level, ['intermediate', 'intermediate_plus']))>Trung bình</option><option value="advanced" @selected($profile->skill_level === 'advanced')>Nâng cao</option><option value="pro" @selected($profile->skill_level === 'pro')>Chuyên nghiệp</option></select></div>
+            <div><label class="mb-1.5 block text-xs font-bold text-slate-700">Phong cách chơi</label><input name="play_style" value="{{ old('play_style', $profile->play_style) }}" placeholder="Ví dụ: Tấn công Smash" class="h-12 w-full rounded-xl border border-slate-300 bg-white px-4 text-sm shadow-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100"></div>
+            <div><label class="mb-1.5 block text-xs font-bold text-slate-700">Tay thuận</label><select name="preferred_hand" class="h-12 w-full rounded-xl border border-slate-300 bg-white px-4 text-sm shadow-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100"><option value="right" @selected($profile->preferred_hand === 'right')>Tay phải</option><option value="left" @selected($profile->preferred_hand === 'left')>Tay trái</option></select></div>
+            <div><label class="mb-1.5 block text-xs font-bold text-slate-700">Thương hiệu vợt</label><input name="racket_brand" value="{{ old('racket_brand', $profile->racket_brand) }}" placeholder="Yonex, Victor, Lining..." class="h-12 w-full rounded-xl border border-slate-300 bg-white px-4 text-sm shadow-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100"></div>
+            <div class="md:col-span-2"><label class="mb-1.5 block text-xs font-bold text-slate-700">Giới thiệu</label><textarea name="bio" rows="3" class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm shadow-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100">{{ old('bio', $profile->bio) }}</textarea></div>
+            <div class="md:col-span-2"><button class="rounded-xl bg-blue-600 px-5 py-3 text-xs font-bold text-white hover:bg-blue-700">Lưu hồ sơ cá nhân</button></div>
+        </form>
+    </section>
+
+    <section class="mb-8 rounded-3xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
+        <div class="mb-5"><h2 class="font-headline text-lg font-bold text-slate-900">Đổi mật khẩu</h2><p class="mt-1 text-xs text-slate-500">Bảo vệ tài khoản bằng mật khẩu mới của bạn.</p></div>
+        <form method="POST" action="{{ route('profile.password.update') }}" class="grid grid-cols-1 gap-4 md:grid-cols-3">
+            @csrf @method('PUT')
+            <div><label class="mb-1.5 block text-xs font-bold text-slate-700">Mật khẩu hiện tại</label><input type="password" name="current_password" required class="h-12 w-full rounded-xl border border-slate-300 bg-white px-4 text-sm shadow-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100"></div>
+            <div><label class="mb-1.5 block text-xs font-bold text-slate-700">Mật khẩu mới</label><input type="password" name="password" required minlength="6" class="h-12 w-full rounded-xl border border-slate-300 bg-white px-4 text-sm shadow-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100"></div>
+            <div><label class="mb-1.5 block text-xs font-bold text-slate-700">Xác nhận mật khẩu mới</label><input type="password" name="password_confirmation" required minlength="6" class="h-12 w-full rounded-xl border border-slate-300 bg-white px-4 text-sm shadow-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100"></div>
+            <div class="md:col-span-3"><button class="rounded-xl bg-slate-900 px-5 py-3 text-xs font-bold text-white hover:bg-slate-700">Cập nhật mật khẩu</button></div>
+        </form>
+    </section>
+
     <section class="grid gap-6 lg:grid-cols-12">
         <div class="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8 lg:col-span-5">
             <div class="mb-5 flex items-center gap-3">

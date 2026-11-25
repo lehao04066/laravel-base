@@ -123,9 +123,12 @@
                                 <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider">Mật khẩu</label>
                                 <span class="text-xs font-semibold text-slate-400">Mật khẩu demo: password123</span>
                             </div>
-                            <div class="relative">
+                            <div class="relative" x-data="{ showPassword: false }">
                                 <span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-lg">lock</span>
-                                <input type="password" name="password" value="password123" required placeholder="Nhập mật khẩu" class="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-blue-600 focus:bg-white transition">
+                                <input :type="showPassword ? 'text' : 'password'" name="password" value="password123" required placeholder="Nhập mật khẩu" class="w-full pl-10 pr-11 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-blue-600 focus:bg-white transition">
+                                <button type="button" @click="showPassword = !showPassword" class="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-blue-600" :aria-label="showPassword ? 'Ẩn mật khẩu' : 'Hiện mật khẩu'">
+                                    <span class="material-symbols-outlined text-lg" x-text="showPassword ? 'visibility_off' : 'visibility'"></span>
+                                </button>
                             </div>
                         </div>
 
