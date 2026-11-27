@@ -50,7 +50,7 @@ class CustomerBookingController extends Controller
     public function show(string|int $id)
     {
         // Enforce that client can ONLY see their own booking
-        $booking = Booking::with(['items.court', 'venue', 'statusHistories.user', 'review.reply'])
+        $booking = Booking::with(['items.court', 'venue', 'statusHistories.user', 'review.reply', 'invoice'])
             ->where(is_numeric($id) ? 'id' : 'booking_code', $id)
             ->where('user_id', Auth::id())
             ->firstOrFail();

@@ -35,7 +35,7 @@
                     </span>
                 @endif
                 <span class="px-3.5 py-1.5 rounded-full text-xs font-bold bg-blue-100 text-blue-800">
-                    THANH TOÁN TẠI SÂN
+                    {{ $booking->payment_method === 'vnpay' ? 'VNPAY' : 'THANH TOÁN TẠI SÂN' }}
                 </span>
             </div>
         </div>
@@ -101,14 +101,26 @@
         <div class="p-6 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-2 text-xs">
             <div class="flex justify-between">
                 <span class="text-slate-500">Hình thức thanh toán:</span>
-                <span class="font-bold text-slate-800">Thanh toán tại sân khi nhận sân</span>
+                <span class="font-bold text-slate-800">{{ $booking->payment_method === 'vnpay' ? 'VNPay' : 'Thanh toán tại sân khi nhận sân' }}</span>
             </div>
             <div class="flex justify-between">
                 <span class="text-slate-500">Trạng thái thanh toán:</span>
                 <span class="font-bold {{ $booking->payment_status === 'paid' ? 'text-emerald-600' : 'text-amber-600' }}">
-                    {{ $booking->payment_status === 'paid' ? 'Đã thanh toán' : 'Chưa thanh toán (Thanh toán tại sân)' }}
+                    {{ $booking->payment_status === 'paid' ? 'Đã thanh toán' : 'Chưa thanh toán' }}
                 </span>
             </div>
+            @if($booking->invoice)
+                <div class="flex justify-between text-emerald-700">
+                    <span>Hóa đơn:</span>
+                    <strong>{{ $booking->invoice->invoice_code }}</strong>
+                </div>
+            @endif
+            @if($booking->payment_status !== 'paid' && $booking->status !== 'cancelled')
+                <form method="POST" action="{{ route('my-bookings.vnpay', $booking->booking_code) }}" class="pt-3">
+                    @csrf
+                    <button class="w-full rounded-xl bg-blue-600 px-5 py-3 text-sm font-bold text-white hover:bg-blue-700">Thanh toán qua VNPay</button>
+                </form>
+            @endif
             <div class="pt-2 border-t border-slate-200 flex justify-between text-sm">
                 <strong class="text-slate-900">Tổng thanh toán:</strong>
                 <strong class="text-blue-600 font-headline text-lg">{{ number_format($booking->final_amount, 0, ',', '.') }} đ</strong>

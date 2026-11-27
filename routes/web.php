@@ -16,6 +16,7 @@ use App\Http\Controllers\MatchmakingController;
 use App\Http\Controllers\MatchHistoryController;
 use App\Http\Controllers\PromotionController;
 use App\Http\Controllers\WalletController;
+use App\Http\Controllers\VnpayController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -41,6 +42,10 @@ Route::get('/register', [AuthController::class, 'showRegister'])->name('register
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
+// VNPay server callbacks are public endpoints authenticated by VNPay HMAC.
+Route::get('/payments/vnpay/return', [VnpayController::class, 'return'])->name('vnpay.return');
+Route::get('/payments/vnpay/ipn', [VnpayController::class, 'ipn'])->name('vnpay.ipn');
+
 // Authenticated Client Routes
 Route::middleware(['auth'])->group(function () {
     Route::post('/promotions/{id}/save', [PromotionController::class, 'saveVoucher'])->name('promotions.save');
@@ -56,6 +61,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/match-history', [MatchHistoryController::class, 'index'])->name('match-history.index');
     Route::post('/match-history', [MatchHistoryController::class, 'store'])->name('match-history.store');
     Route::post('/booking/submit', [CourtBookingController::class, 'submitBooking'])->name('booking.submit');
+    Route::post('/my-bookings/{id}/vnpay', [VnpayController::class, 'create'])->name('my-bookings.vnpay');
     Route::get('/my-bookings', [CustomerBookingController::class, 'index'])->name('my-bookings');
     Route::get('/my-bookings/list', [CustomerBookingController::class, 'index'])->name('my-bookings.index');
     Route::get('/my-bookings/{id}', [CustomerBookingController::class, 'show'])->name('my-bookings.show');
